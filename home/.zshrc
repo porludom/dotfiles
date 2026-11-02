@@ -24,8 +24,14 @@ _extend_path "$HOME/.local/bin"
 if [ "$(uname)" = "Darwin" ]; then
   _extend_path "/opt/homebrew/sbin"
   _extend_path "/opt/homebrew/bin"
+  _extend_path "$HOME/go/bin"
   _extend_path "$(brew --prefix)/opt/python@3.12/libexec/bin"
 fi
+
+# Load the default config first, followed by YAML paths from ~/.kube.
+# _kube_yaml_files=("$HOME/.kube/config" "$HOME"/.kube/*.(yaml|yml)(N-.))
+# export KUBECONFIG="${(j.:.)_kube_yaml_files}"
+# unset _kube_yaml_files
 
 # ------------------------------------------------------------------------------
 # Plugins
