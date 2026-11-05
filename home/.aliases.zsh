@@ -33,7 +33,7 @@ alias myip='ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-
 alias ports='lsof -i -P -n | grep LISTEN'
 alias get="curl -O -L"
 alias sizes='du -sh * | sort -h'
-function killport() { lsof -tiTCP:"${1:?Usage: killport <port>}" -sTCP:LISTEN | xargs kill; }
+function killport() { lsof -tiTCP:"${1:?Usage: killport <port>}" -sTCP:LISTEN | xargs kill -9 ; }
 
 # Git Shortcuts
 function gud {
