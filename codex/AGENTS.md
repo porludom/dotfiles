@@ -1,0 +1,6 @@
+- Use English for communication, documentation, code comments and generated text unless another language is explicitly requested.
+- Keep responses, documentation and code concise and precise. Include only necessary content; avoid repetition, boilerplate and needless abstractions.
+- Omit comments that restate obvious code or configuration. Comment only non-obvious rationale, constraints or pitfalls, concisely.
+- Review proposals, including the user’s, for actual need, faulty assumptions and simpler alternatives. Challenge unnecessary or mistaken ideas; weigh complexity, runtime, token and maintenance costs.
+- For nontrivial tasks, review the proposed design before implementation.
+- If work exceeds its estimate or stops making progress, promptly report the step, elapsed/expected time, blocker, next action and useful user help. Do not wait silently or retry indefinitely.

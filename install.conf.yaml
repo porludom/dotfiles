@@ -11,9 +11,34 @@
 
 - clean: ["~"]
 
+- shell:
+    - description: Prepare shared Codex config directory
+      command: test -w /etc/codex || sudo install -d -o "$(id -un)" /etc/codex
+
 - link:
     ~/:
       path: home/.*
+
+    ~/.codex/skills/dev-flow:
+      path: codex/skills/dev-flow
+      glob: false
+      force: false
+
+    ~/.codex/AGENTS.md:
+      path: codex/AGENTS.md
+      glob: false
+      force: false
+
+    ~/.codex/keybindings.json:
+      path: codex/keybindings.json
+      glob: false
+      force: false
+
+    /etc/codex/config.toml:
+      path: codex/config.toml
+      glob: false
+      force: false
+      relink: false
 
 - create:
     ~/dev:
