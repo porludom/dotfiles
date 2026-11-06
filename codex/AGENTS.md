@@ -25,6 +25,8 @@ Apply sections by intent: an action request phrased as a question is still an ac
 - Follow the applicable [Google style guide](https://google.github.io/styleguide/).
 - For Python quality checks, use `uvx ruff check` and `uvx mypy` with repository
   configuration.
+- Reuse repository check entrypoints. Consolidate repeatedly reconstructed commands;
+  keep costly and remote checks explicit.
 - Comment only non-obvious rationale, constraints or pitfalls.
 - Before nontrivial implementation, assess responsibilities, reuse, alternatives
   and failure costs.
@@ -36,6 +38,9 @@ Apply sections by intent: an action request phrased as a question is still an ac
   failures.
 - Separate readiness/liveness from functional diagnostics. Add stronger checks
   only for required guarantees worth their operational cost.
+- Test behavior and explicitly required structure. For approved removals, update
+  obsolete expectations against the accepted contract; do not restore removed
+  behavior or weaken remaining acceptance to satisfy tests.
 - The implementation owner verifies affected behavior. Reviewers reuse evidence
   and add only named missing coverage. Rerun only for relevant changes, failures or
   uncovered risks; agree before reducing acceptance.

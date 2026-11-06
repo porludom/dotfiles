@@ -14,8 +14,7 @@ without replaying completed phases.
 
 On first use, ensure active AGENTS.md/AGENTS.override.md conditionally
 references dev-flow, preserving other guidance. During read-only work, report
-missing guidance without editing it. Keep portable sources in
-~/.dotfiles/codex/, linked into ~/.codex; runtime state stays local.
+missing guidance without editing it.
 
 ## Team and scope
 
@@ -110,7 +109,6 @@ changes as useful.
 
 Stop at acceptance; queue unrelated ideas. Deliver outcome/files, proof limits
 and approval/commit disposition. End with **Next:** exact input/action or
-finished; do not select another batch. Validate skill edits against supplied
-requirements, supporting files and global AGENTS.md; report conflicts/omissions.
-Judge improvements by time, available token usage, interruptions, repeated
-checks and defects, not agent/test counts.
+finished; do not select another batch. For workflow changes, use the
+[evaluation cases](references/evaluation.md); report conflicts and verification
+limits.

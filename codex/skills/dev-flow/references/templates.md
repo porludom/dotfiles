@@ -16,7 +16,7 @@ Preserve existing plans, approvals and concurrent entries.
 | docs/status.md | Concurrent owners, dependencies, shared constraints and coordination |
 | docs/backlog.md | Ordered task links/queue; Completed last |
 | docs/backlog/<ID>.md | Scope, state/progress, acceptance, decisions, approvals and evidence |
-| tests/README.md | Check commands, environments and proof limits |
+| tests/README.md | Check entrypoint usage, environments and proof limits |
 
 Selection is not approval. One outcome has one task, including code/tests/docs. Review notes hold
 findings, not copied approvals. Status/backlog link tasks rather than copying their state/progress.

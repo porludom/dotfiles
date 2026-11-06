@@ -6,3 +6,6 @@ in `~/.codex/config.toml`.
 
 Dotbot uses `sudo` once per Mac to make `/etc/codex` writable by your user,
 preserving existing config files or other links. Restart Codex to reload.
+
+Portable guidance lives here, linked as `~/.codex/AGENTS.md` and
+`~/.codex/skills/dev-flow`. Runtime state stays local.
