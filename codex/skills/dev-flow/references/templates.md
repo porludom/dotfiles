@@ -1,6 +1,7 @@
 # Documents and records
 
-[SKILL.md](../SKILL.md) owns workflow policy. Use only relevant sections; adapt headings/order.
+Process: [SKILL.md](../SKILL.md). Common rules: [global AGENTS.md](../../../AGENTS.md).
+Use relevant sections; adapt headings/order.
 Preserve existing plans, approvals and concurrent entries.
 
 ## Document map
@@ -45,9 +46,9 @@ Verification: [Risks, permitted checks and limits.]
 ```
 
 Capture needs title/ID, Type/State, Approval and Overview. Full records add acceptance, Verification
-and Evidence; optional Details hold decisions/contracts/dependencies and caller examples. Keep
-Overview/checklist readable without Details. Approval records pending/approved/waived gates, conditions and reviewed diff/revision
-once, outside Evidence.
+and Evidence. Optional Details hold decisions/contracts/dependencies and caller examples; Overview
+and checklist must read independently. Approval owns gates (pending/approved/waived), conditions
+and reviewed diff/revision; do not duplicate them in Evidence.
 
 Types: feature, bug, improvement, refactor, research, docs, maintenance, task.
 States: Backlog (captured/queued), Clarify (questions), To Do (scoped), In Progress (authorized work),
@@ -95,7 +96,7 @@ Next new ID: PROJ-018.
 
 ## Completed
 
-[Accepted task links; same columns; final section.]
+[Accepted task links; same columns.]
 ```
 
 Reserve IDs by exclusive creation; retry collisions, never overwrite/reuse. Serialize index writes
