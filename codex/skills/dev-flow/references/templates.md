@@ -1,179 +1,107 @@
-# Document templates
+# Documents and records
 
-Use applicable sections only. Keep facts in their owning document; link instead of repeating.
-[SKILL.md](../SKILL.md) owns workflow policy. These examples define content, not heading order.
+[SKILL.md](../SKILL.md) owns workflow policy. Use only relevant sections; adapt headings/order.
+Preserve existing plans, approvals and concurrent entries.
 
-## README.md
+## Document map
 
-```markdown
-# [Project]
+| File | Owns |
+| --- | --- |
+| README.md | Quickstart/prerequisites |
+| docs/README.md | Document links |
+| docs/requirements.md | Lasting behavior/UX/constraints |
+| docs/design.md | Architecture, protocols and rationale |
+| docs/operations.md | Deployment, updates and recovery |
+| docs/status.md | Concurrent owners, dependencies, shared constraints and coordination |
+| docs/backlog.md | Ordered task links/queue; Completed last |
+| docs/backlog/<ID>.md | Scope, state/progress, acceptance, decisions, approvals and evidence |
+| tests/README.md | Check commands, environments and proof limits |
 
-[Purpose and prerequisites.]
+Selection is not approval. One outcome has one task, including code/tests/docs. Review notes hold
+findings, not copied approvals. Status/backlog link tasks rather than copying their state/progress.
 
-[Working quickstart and expected result.]
-
-[Documentation](docs/README.md)
-```
-
-## docs/README.md
-
-```markdown
-# Documentation
-
-| Document                        | Purpose                 |
-| ------------------------------- | ----------------------- |
-| [Quickstart](../README.md)      | Setup and use           |
-| [Requirements](requirements.md) | Behavior and UX         |
-| [Design](design.md)             | Architecture            |
-| [Operations](operations.md)     | Deployment and recovery |
-| [Status](status.md)             | Active work             |
-| [Backlog](backlog.md)           | Task index              |
-| [Testing](../tests/README.md)   | Checks and environments |
-```
-
-## docs/requirements.md
+## Task record
 
 ```markdown
-# Requirements
+# PROJ-017: Outcome
 
-## Purpose
-[Actors, outcome and scope.]
+Type: bug. State: Clarify.
+Approval: plan=pending; delivery=pending.
+Progress: Input selection unresolved; next: clarify requirements.
 
-## UX and contracts
-[Supported flows, failures/cancellation, interfaces/configuration and defaults.]
+## Overview
 
-## Constraints
-[Lasting project policies. Link pending changes; omit task plans/progress.]
+[Problem, outcome and scope.]
+
+## Tasks
+
+- [ ] [Observable behavior and requested API/ownership structure, if changed.]
+
+Verification: [Risks, permitted checks and limits.]
+
+## Evidence
+
+[Checked boundary/revision, results/references and gaps.]
 ```
 
-## docs/design.md
+Capture needs title/ID, Type/State, Approval and Overview. Full records add acceptance, Verification
+and Evidence; optional Details hold decisions/contracts/dependencies and caller examples. Keep
+Overview/checklist readable without Details. Approval records pending/approved/waived gates, conditions and reviewed diff/revision
+once, outside Evidence.
 
-```markdown
-# Design
+Types: feature, bug, improvement, refactor, research, docs, maintenance, task.
+States: Backlog (captured/queued), Clarify (questions), To Do (scoped), In Progress (authorized work),
+Review (awaiting plan/delivery approval), Done (accepted), Cancelled (abandoned).
 
-## Boundaries
-[Components, stack and dependency direction.]
+Use Review when only waiting; ongoing authorized work stays In Progress with its pending gate named.
+Add no review-specific states. Record blockers/unblock conditions. Postponement returns to Backlog
+with a reason; retain cancellation reasons and Done records. Done requires accepted scope/resolved gates.
 
-## Contracts
-[Data flow, protocols, ownership and lifecycle invariants.]
+Progress: `milestone; next gate/blocker`. Optional percentages estimate selected work, not checkboxes
+or fixed state values; label phase-only estimates. Deferred required checks remain incomplete;
+unapproved optional work does not reduce progress. Revise estimates on scope change, retain them
+while blocked and name the blocker. 100% means Done, without strengthening proof limits.
 
-## Decisions
-[Material rationale only; link approved requirements and task details.]
-```
-
-## docs/operations.md
-
-```markdown
-# Operations
-
-## Access
-[Prerequisites and permissions.]
-
-## Deploy and update
-[Usable commands and observable success.]
-
-## Recover
-[Backup/recovery procedures and limits.]
-```
-
-## docs/status.md
+## Status
 
 ```markdown
 # Current work
 
 Maturity: pre-production.
-Baseline: [delivered revision/evidence].
-Scope: [active selection and shared limits; link task approvals/evidence].
+Baseline: [Revision/evidence.]
+Shared limits: [Constraints; link tasks.]
 
-| Task                            | Phase          | Owner    | Waiting on    | Next                   |
-| ------------------------------- | -------------- | -------- | ------------- | ---------------------- |
-| [PROJ-017](backlog/PROJ-017.md) | Planning       | worker-a | Plan approval | User reviews proposal  |
-| [PROJ-018](backlog/PROJ-018.md) | Implementation | worker-b | —             | Complete owned changes |
-
-Next step: [main's coordination action; retain every ongoing task].
+| Task | Owner/chat | Checkout / write boundary | Dependency/resource | Coordination |
+| --- | --- | --- | --- | --- |
+| [PROJ-017](backlog/PROJ-017.md) | chat-a | checkout A: src/feature/ | Shared host | Wait for PROJ-016 to release it |
 ```
 
-Batch evidence/last delivery may be a short link when useful. Task records own approvals,
-checklists and detailed evidence; status owns selection, scheduling and shared constraints.
-
-## docs/backlog.md
+## Backlog
 
 ```markdown
 # Backlog
 
-Next new ID: PROJ-019.
+Next new ID: PROJ-018.
 
 ## Open
 
-| ID                              | Task                            | State   |
-| ------------------------------- | ------------------------------- | ------- |
-| [PROJ-017](backlog/PROJ-017.md) | Preserve details during refresh | Clarify |
+| ID | Task |
+| --- | --- |
+| [PROJ-017](backlog/PROJ-017.md) | Outcome |
 
 ## Cancelled
-[Optional rows with task links; reasons stay in the task.]
+
+[Optional; same columns.]
 
 ## Completed
-[Done rows using the same columns; always the final section.]
+
+[Accepted task links; same columns; final section.]
 ```
 
-## docs/backlog/<ID>.md
+Reserve IDs by exclusive creation; retry collisions, never overwrite/reuse. Serialize index writes
+or re-read/merge/retry, preserving concurrent rows and the highest counter.
 
-```markdown
-# PROJ-017: Preserve details during refresh
+## Worker handoffs
 
-Type: bug. State: Clarify.
-Approval: plan=pending; delivery=pending.
-
-## Overview
-
-[Problem, why it matters, intended outcome and boundaries. Link useful details below.]
-
-## Tasks
-
-- [ ] [Keep the selected run stable during refresh](#selection-rules).
-
-Verification: [affected risks, checks/permissions, owner and limits].
-
-## Details
-
-### Selection rules
-
-[Only additional decisions, constraints, owners/dependencies or links to existing contracts.]
-
-## Evidence
-
-[Delivered revision, check results/references, review findings and remaining gaps.]
-```
-
-Keep Overview and task items readable on their own. Details are optional; omit them and their
-links when they add no useful information. Each task item describes an observable result.
-Approval owns both gates, conditions/waivers and the reviewed delivery revision.
-Values are pending, approved or waived; do not repeat approval in Evidence.
-Capture needs title/ID, Type/State, Approval and Overview. Full records also need Tasks with
-an acceptance checklist, Verification and Evidence. Section order is flexible; add detail only
-where needed. Existing linked plans remain authoritative.
-
-## tests/README.md
-
-```markdown
-# Testing
-
-## Local checks
-[Relevant unit/smoke commands and prerequisites.]
-
-## Broader checks
-[Commands, environments, expected duration and required approval.]
-
-## Limits
-[What each check proves and remaining runtime/manual evidence.]
-```
-
-## Handoffs
-
-Approval: outcome/decisions; task link; scope/owners; acceptance/test limits; precise gate requested.
-
-Worker: assigned phase/authorization, outcome/contracts; exclusive boundary/dependencies;
-done condition; permitted checks/budget;
-escalation conditions. Return short outcome/files, decisions needed, evidence references and blockers.
-
-Delivery: outcome/files and delivered diff/revision; verification limits; pending approval/commit; **Next:** exact action/input.
+Assign phase, outcome/contracts, exclusive boundary, dependencies, done condition, permitted checks/
+budget and escalation conditions. Return outcome, changed files, decisions, evidence and blockers.

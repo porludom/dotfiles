@@ -1,6 +1,6 @@
 interface:
   display_name: "Development flow"
-  short_description: "Parallel workers with plan and delivery approvals"
-  default_prompt: "Use $dev-flow: orchestrate parallel workers and request plan and delivery approvals with proportionate code, docs and checks."
+  short_description: "Scoped changes with approvals and focused checks"
+  default_prompt: "Use $dev-flow: keep work proportionate, preserve approval gates, delegate when useful and verify affected behavior."
 policy:
   allow_implicit_invocation: false

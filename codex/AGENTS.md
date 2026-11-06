@@ -1,6 +1,10 @@
-- Use English for communication, documentation, code comments and generated text unless another language is explicitly requested.
-- Keep responses, documentation and code concise and precise. Include only necessary content; avoid repetition, boilerplate and needless abstractions.
-- Omit comments that restate obvious code or configuration. Comment only non-obvious rationale, constraints or pitfalls, concisely.
-- Review proposals, including the user’s, for actual need, faulty assumptions and simpler alternatives. Challenge unnecessary or mistaken ideas; weigh complexity, runtime, token and maintenance costs.
-- For nontrivial tasks, review the proposed design before implementation.
-- If work exceeds its estimate or stops making progress, promptly report the step, elapsed/expected time, blocker, next action and useful user help. Do not wait silently or retry indefinitely.
+- Use English unless explicitly asked otherwise.
+- Keep responses, docs and code concise and precise; omit repetition and boilerplate.
+- Follow the applicable [Google style guide](https://google.github.io/styleguide/).
+- For Python code quality, use `uvx ruff check` and `uvx mypy` with repository configuration.
+- Comment only non-obvious rationale, constraints or pitfalls.
+- Before nontrivial implementation, assess responsibilities, reuse, alternatives and failure costs. Challenge unnecessary proposals, including the user's; consider runtime, tokens and maintenance.
+- Put concrete shared behavior/contracts in base classes; avoid speculative abstractions. Propose useful structural changes; obtain approval for substantial changes and update affected requirements/design.
+- Validate only selected-path inputs, once at their owning boundary. Leave prompt, harmless argument failures to dependencies; guard concrete dangerous or costly failures.
+- Separate readiness/liveness from functional diagnostics. Add stronger checks only for required guarantees worth their operational cost.
+- Promptly report overruns/stalls: elapsed/expected time, blocker, next action and useful user help.
