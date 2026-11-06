@@ -1,75 +1,5 @@
-# ------------------------------------------------------------------------------
-# Environment
-# ------------------------------------------------------------------------------
+# Helpers
 
-# User settings
-export EDITOR=nvim
-
-# Locale
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-
-# Extend $PATH without duplicates
-_extend_path() {
-  [[ -d "$1" ]] || return
-
-  # if ! $( echo "$PATH" | tr ":" "\n" | grep -qx "$1" ) ; then
-    export PATH="$1:$PATH"
-  # fi
-}
-
-# Add custom bin to $PATH
-_extend_path "$HOME/.local/bin"
-if [ "$(uname)" = "Darwin" ]; then
-  _extend_path "/opt/homebrew/sbin"
-  _extend_path "/opt/homebrew/bin"
-  _extend_path "$HOME/go/bin"
-  _extend_path "$(brew --prefix)/opt/python@3.12/libexec/bin"
-fi
-
-# Load the default config first, followed by YAML paths from ~/.kube.
-# _kube_yaml_files=("$HOME/.kube/config" "$HOME"/.kube/*.(yaml|yml)(N-.))
-# export KUBECONFIG="${(j.:.)_kube_yaml_files}"
-# unset _kube_yaml_files
-
-# ------------------------------------------------------------------------------
-# Plugins
-# ------------------------------------------------------------------------------
-
-# Completions
-autoload -Uz compinit
-zmodload -i zsh/complist
-compinit -C
-
-# History settings
-HISTSIZE=50000
-SAVEHIST=50000
-HISTFILE="$HOME/.zsh_history"
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE  # don't save commands starting with space
-setopt SHARE_HISTORY  # share history across terminals
-
-# Export oh-my-zsh
-export ZSH="$HOME/.local/share/sheldon/repos/github.com/ohmyzsh/ohmyzsh"
-plugins=(
-  macos          # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
-  git            # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
-  brew           # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew
-  docker         # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker
-  docker-compose # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-compose
-  sudo           # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo
-
-  colored-man-pages # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colored-man-pages
-
-  ssh-agent
-  #   gpg-agent
-)
-
-# Load sheldon plugins
-eval "$(sheldon source)"
-
-# Check if a command/file exists
 _exists() {
   if command -v -- "$1" >/dev/null 2>&1; then
     return 0
@@ -87,43 +17,79 @@ _source() {
   fi
 }
 
-# Trash CLI - https://github.com/sindresorhus/trash-cli
-if _exists trash; then
-  alias rm='trash'
+_extend_path() {
+  [[ -d "$1" ]] || return
+  export PATH="$1:$PATH"
+}
+
+# Environment
+
+# User settings
+export EDITOR=nvim
+
+# Locale
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
+_extend_path "$HOME/.local/bin"
+if [ "$(uname)" = "Darwin" ]; then
+  _extend_path "/opt/homebrew/sbin"
+  _extend_path "/opt/homebrew/bin"
+  _extend_path "$HOME/go/bin"
+  _extend_path "$(brew --prefix)/opt/python@3.12/libexec/bin"
 fi
 
-# Use tldr as help util - https://github.com/tldr-pages/tldr
-if _exists tldr; then
-  alias help="tldr"
+# Load the default config first, followed by YAML paths from ~/.kube.
+# _kube_yaml_files=("$HOME/.kube/config" "$HOME"/.kube/*.(yaml|yml)(N-.))
+# export KUBECONFIG="${(j.:.)_kube_yaml_files}"
+# unset _kube_yaml_files
+
+# History
+HISTSIZE=50000
+SAVEHIST=50000
+HISTFILE="$HOME/.zsh_history"
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE  # don't save commands starting with space
+setopt SHARE_HISTORY  # share history across terminals
+
+# Completions
+autoload -Uz compinit
+zmodload -i zsh/complist
+compinit -C
+
+# Plugins
+export ZSH="$HOME/.local/share/sheldon/repos/github.com/ohmyzsh/ohmyzsh"
+plugins=(
+  macos          # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos
+  git            # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
+  brew           # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/brew
+  docker         # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker
+  docker-compose # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-compose
+  sudo           # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo
+
+  colored-man-pages # https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/colored-man-pages
+
+  ssh-agent
+  #   gpg-agent
+)
+
+# The ssh-agent plugin reads these settings while loading.
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  zstyle :omz:plugins:ssh-agent ssh-add-args --apple-use-keychain
+  # An explicit identity list replaces the plugin's defaults; retain those keys.
+  zstyle :omz:plugins:ssh-agent identities \
+    id_rsa id_dsa id_ecdsa id_ed25519 id_ed25519_sk identity id_ed25519_rizzzhik
 fi
 
-# Better ls - https://github.com/eza-community/eza
-if _exists eza; then
-  alias ls='eza -a --icons=auto'
-  alias ll='eza -lah'
-  alias tree='eza -T'
-fi
+eval "$(sheldon source)"
 
-# Cat with syntax highlighting - https://github.com/sharkdp/bat
-if _exists bat; then
-  # Run to list all themes:
-  #   bat --list-themes
-  export BAT_THEME='ansi'
-  alias cat='bat -p'
-fi
+# Shell integrations
 
 # Fuzzy finder - https://github.com/junegunn/fzf
 if _exists fzf; then
   source <(fzf --zsh)
 fi
-
-# Use passphrase from macOS keychain
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  zstyle :omz:plugins:ssh-agent ssh-add-args --apple-load-keychain
-fi
-
-# Export custom aliases
-_source ~/.aliases.zsh
 
 # Modern cd - https://github.com/ajeetdsouza/zoxide
 if _exists zoxide; then
@@ -134,6 +100,9 @@ fi
 if [ "$(uname)" = "Darwin" ]; then
   _source ~/.iterm2_shell_integration.zsh
 fi
+
+# Load personal command overrides after plugins and integrations.
+_source ~/.aliases.zsh
 
 # Private settings
 if [ -f ~/.zshrc.private.zsh ]; then
