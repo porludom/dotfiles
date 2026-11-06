@@ -1,39 +1,59 @@
+# Model
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
+model_verbosity = "low"
+
+# Context
+model_post_turn_compact_threshold_percent = 75
+tool_output_token_limit = 4000
+
+# Execution
 approval_policy = "on-request"
-approvals_reviewer = "user"
+approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
 network_access = true
 
+[features]
+js_repl = false
+memories = true
+
+[memories]
+generate_memories = true
+use_memories = true
+
+[mcp_servers.openaiDeveloperDocs]
+startup_readiness = "catalog"
+url = "https://developers.openai.com/mcp"
+
 [plugins]
-"google-calendar@openai-curated" = { enabled = true }
-"gmail@openai-curated" = { enabled = true }
 "browser@openai-bundled" = { enabled = true }
-"visualize@openai-bundled" = { enabled = true }
-"documents@openai-primary-runtime" = { enabled = true }
-"pdf@openai-primary-runtime" = { enabled = true }
-"spreadsheets@openai-primary-runtime" = { enabled = true }
-"presentations@openai-primary-runtime" = { enabled = true }
-"template-creator@openai-primary-runtime" = { enabled = true }
-"computer-use@openai-bundled" = { enabled = true }
-"codex-app-tools@openai-bundled" = { enabled = true }
-"unified-computer-use@openai-bundled" = { enabled = true }
 "code-review@openai-bundled" = { enabled = true }
+"codex-app-tools@openai-bundled" = { enabled = true }
+"computer-use@openai-bundled" = { enabled = true }
+"documents@openai-primary-runtime" = { enabled = true }
+"gmail@openai-curated" = { enabled = true }
+"google-calendar@openai-curated" = { enabled = true }
+"pdf@openai-primary-runtime" = { enabled = true }
+"presentations@openai-primary-runtime" = { enabled = true }
+"spreadsheets@openai-primary-runtime" = { enabled = true }
+"template-creator@openai-primary-runtime" = { enabled = true }
+"unified-computer-use@openai-bundled" = { enabled = true }
+"visualize@openai-bundled" = { enabled = true }
 
 [desktop]
-git-branch-prefix = ""
-followUpQueueMode = "queue"
-conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = true
-show-context-window-usage = true
-appearanceLightCodeThemeId = "catppuccin"
-appearanceDarkCodeThemeId = "catppuccin"
 appearanceDiffMarkerStyle = "color"
-git-pull-request-merge-method = "squash"
+appearanceDarkCodeThemeId = "catppuccin"
+appearanceLightCodeThemeId = "catppuccin"
 avatar-overlay-pet-visible = false
 confirm-before-close = "never"
+conversationDetailMode = "STEPS_COMMANDS"
+followUpQueueMode = "queue"
+git-branch-prefix = ""
+git-pull-request-merge-method = "squash"
+show-context-window-usage = true
 
 [desktop.appearanceLightChromeTheme]
 accent = "#8839ef"
@@ -59,19 +79,15 @@ diffAdded = "#a6e3a1"
 diffRemoved = "#f38ba8"
 skill = "#cba6f7"
 
-[features]
-js_repl = false
-memories = true
-
-[mcp_servers.openaiDeveloperDocs]
-url = "https://developers.openai.com/mcp"
-
-[memories]
-generate_memories = true
-use_memories = true
-
 [tui]
-session_picker_view = "comfortable"
-status_line = ["model-with-reasoning", "current-dir", "thread-name", "context-used", "five-hour-limit", "weekly-limit"]
-status_line_use_colors = true
 resume_cwd = "session"
+session_picker_view = "comfortable"
+status_line = [
+  "model-with-reasoning",
+  "current-dir",
+  "thread-name",
+  "context-used",
+  "five-hour-limit",
+  "weekly-limit",
+]
+status_line_use_colors = true
