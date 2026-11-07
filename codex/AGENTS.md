@@ -30,6 +30,9 @@ Apply sections by intent: an action request phrased as a question is still an ac
 - Comment only non-obvious rationale, constraints or pitfalls.
 - Before nontrivial implementation, assess responsibilities, reuse, alternatives
   and failure costs.
+- Before nontrivial changes, define observable acceptance criteria and critical
+  invariants, then verify those exact behavior paths. Keep small fixes direct;
+  do not add plans, records or approval gates solely for this rule.
 - Before significant UI layout or navigation changes, show a representative mockup
   with realistic content and agree on the direction before implementation. Reuse
   an already approved design or honor an explicit waiver. Handle minor copy and
