@@ -28,22 +28,22 @@ if [[ $# -gt 1 ]]; then
 fi
 
 case "${1:-update}" in
-  update)
-    load_repository_url
-    step "Update dotfiles repository" update_repository
-    step "Update packages and applications" update_packages
-    step "Apply links" apply_links
-    step "Update shell plugins" sheldon lock --update
-    step "Apply configured application settings" sync_settings
-    log "Update complete."
-    ;;
-  cleanup)
-    load_repository_url
-    step "Clean package caches" cleanup_packages
-    log "Cleanup complete."
-    ;;
-  *)
-    printf 'Usage: %s [update|cleanup]\n' "$0" >&2
-    exit 2
-    ;;
+update)
+  load_repository_url
+  step "Update dotfiles repository" update_repository
+  step "Update packages and applications" update_packages
+  step "Apply links" apply_links
+  step "Update shell plugins" sheldon lock --update
+  step "Apply configured application settings" sync_settings
+  log "Update complete."
+  ;;
+cleanup)
+  load_repository_url
+  step "Clean package caches" cleanup_packages
+  log "Cleanup complete."
+  ;;
+*)
+  printf 'Usage: %s [update|cleanup]\n' "$0" >&2
+  exit 2
+  ;;
 esac

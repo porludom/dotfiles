@@ -13,7 +13,7 @@ enable_touch_id() {
   fi
   temporary="$(mktemp)"
   # Keep custom PAM entries and enable only Apple's optional Touch ID module.
-  sed -E 's/^#(auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so)/\1/' "$source_config" > "$temporary"
+  sed -E 's/^#(auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so)/\1/' "$source_config" >"$temporary"
   if ! grep -Eq '^auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so([[:space:]]|$)' "$temporary"; then
     rm -f "$temporary"
     fail "No Touch ID entry found in $config or its macOS template."

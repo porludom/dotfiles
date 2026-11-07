@@ -31,13 +31,13 @@ load_repository_url() {
   command -v git >/dev/null 2>&1 || return 0
   remote="$(git -C "$ROOT" config --get remote.origin.url)" || return 0
   case "$remote" in
-    git@*:*)
-      remote="${remote#git@}"
-      remote="https://${remote%%:*}/${remote#*:}"
-      ;;
-    ssh://git@*) remote="https://${remote#ssh://git@}" ;;
-    https://*|http://*) ;;
-    *) return 0 ;;
+  git@*:*)
+    remote="${remote#git@}"
+    remote="https://${remote%%:*}/${remote#*:}"
+    ;;
+  ssh://git@*) remote="https://${remote#ssh://git@}" ;;
+  https://* | http://*) ;;
+  *) return 0 ;;
   esac
   remote="${remote%/}"
   GITHUB_REPO_URL_BASE="${remote%.git}"

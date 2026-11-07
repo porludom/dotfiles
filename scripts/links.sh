@@ -2,7 +2,10 @@
 
 link_file() {
   local source="$1" destination="$2" policy="$3"
-  [[ -e "$source" ]] || { fail "Link source is missing: $source"; return 1; }
+  [[ -e "$source" ]] || {
+    fail "Link source is missing: $source"
+    return 1
+  }
   if [[ "$source" -ef "$destination" ]]; then
     return
   fi
@@ -29,13 +32,13 @@ clean_home_links() {
     [[ -L "$link" && ! -e "$link" ]] || continue
     target="$(readlink "$link")"
     [[ "$target" == /* ]] || target="$HOME/$target"
-    IFS=/ read -r -a components <<< "$target"
+    IFS=/ read -r -a components <<<"$target"
     resolved=""
     for component in "${components[@]}"; do
       case "$component" in
-        ''|.) continue ;;
-        ..) resolved="${resolved%/*}" ;;
-        *) resolved="$resolved/$component" ;;
+      '' | .) continue ;;
+      ..) resolved="${resolved%/*}" ;;
+      *) resolved="$resolved/$component" ;;
       esac
       # Resolve existing directory symlinks before checking checkout ownership.
       if [[ -d "$resolved" ]]; then
@@ -44,7 +47,10 @@ clean_home_links() {
       fi
     done
     case "$resolved" in
-      "$checkout"/*) rm -- "$link"; log "Removed broken link $link" ;;
+    "$checkout"/*)
+      rm -- "$link"
+      log "Removed broken link $link"
+      ;;
     esac
   done
 }
@@ -70,8 +76,8 @@ apply_links() {
 sync_settings() {
   local formula prefix
   if [[ "$(uname -s)" == Darwin ]]; then
-    formula="$(brew bundle list --formula --file="$ROOT/Brewfile" \
-      | awk '/^python(@|$)/ && !selected { selected = $0 } END { print selected }')"
+    formula="$(brew bundle list --formula --file="$ROOT/Brewfile" |
+      awk '/^python(@|$)/ && !selected { selected = $0 } END { print selected }')"
     prefix="$(brew --prefix "$formula")"
     "$prefix/libexec/bin/python3" "$ROOT/sync.py" "$@"
   fi
