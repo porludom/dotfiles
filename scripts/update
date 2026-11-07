@@ -38,8 +38,10 @@ update_python() {
 
   packages=(
     pip
-    uv
   )
+  if [ "$(uname)" != "Darwin" ]; then
+    packages+=(uv)
+  fi
   echo "Installing: ${packages[*]}"
   python$version -m pip install --upgrade "${packages[@]}" --break-system-packages
 

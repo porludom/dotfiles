@@ -126,8 +126,11 @@ install_python() {
 
   packages=(
     pip
-    uv
   )
+  # Homebrew owns uv on macOS; keep the existing pip installation on Linux.
+  if [ "$(uname)" != "Darwin" ]; then
+    packages+=(uv)
+  fi
   echo "Installing: ${packages[*]}"
   python$version -m pip install --upgrade "${packages[@]}" --break-system-packages
 

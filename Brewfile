@@ -32,6 +32,7 @@ brew "trash-cli"                 # https://github.com/andreafrancia/trash-cli
 brew "tldr"                      # https://tldr.sh
 brew "terminal-notifier"         # https://github.com/julienXX/terminal-notifier
 brew "tmux"                      # https://github.com/tmux/tmux/wiki
+brew "uv"                        # https://docs.astral.sh/uv
 brew "wget"                      # https://gnu.org/software/wget
 brew "yt-dlp"                    # https://github.com/yt-dlp/yt-dlp
 brew "zsh"                       # https://zsh.org
