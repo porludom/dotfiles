@@ -39,6 +39,7 @@
 
   // Editor behavior
   "editor.linkedEditing": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
   "editor.unicodeHighlight.ambiguousCharacters": false,
   "editor.accessibilitySupport": "off",
   "diffEditor.ignoreTrimWhitespace": false,
@@ -116,8 +117,8 @@
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-      "source.fixAll": "explicit",
+      "source.organizeImports.ruff": "explicit",
+      "source.fixAll.ruff": "explicit",
     },
   },
   "ruff.configurationPreference": "filesystemFirst",
