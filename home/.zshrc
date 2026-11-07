@@ -26,6 +26,7 @@ _extend_path() {
 
 # User settings
 export EDITOR=nvim
+typeset -U path PATH
 
 # Locale
 export LC_ALL=en_US.UTF-8
@@ -40,23 +41,14 @@ if [ "$(uname)" = "Darwin" ]; then
   _extend_path "$(brew --prefix)/opt/python@3.12/libexec/bin"
 fi
 
-# Load the default config first, followed by YAML paths from ~/.kube.
-# _kube_yaml_files=("$HOME/.kube/config" "$HOME"/.kube/*.(yaml|yml)(N-.))
-# export KUBECONFIG="${(j.:.)_kube_yaml_files}"
-# unset _kube_yaml_files
-
 # History
-HISTSIZE=50000
+HISTSIZE=100000
 SAVEHIST=50000
 HISTFILE="$HOME/.zsh_history"
 setopt HIST_IGNORE_DUPS
+setopt HIST_SAVE_NO_DUPS  # keep repeated commands from filling saved history
 setopt HIST_IGNORE_SPACE  # don't save commands starting with space
 setopt SHARE_HISTORY  # share history across terminals
-
-# Completions
-autoload -Uz compinit
-zmodload -i zsh/complist
-compinit -C
 
 # Plugins
 export ZSH="$HOME/.local/share/sheldon/repos/github.com/ohmyzsh/ohmyzsh"
@@ -86,14 +78,33 @@ eval "$(sheldon source)"
 
 # Shell integrations
 
+autoload -Uz edit-command-line
+zle -N edit-command-line
+zstyle :zle:edit-command-line editor "$EDITOR"
+bindkey -M emacs '^Xe' edit-command-line
+bindkey -M viins '^Xe' edit-command-line
+bindkey -M emacs '^Xq' push-line
+bindkey -M viins '^Xq' push-line
+
 # Fuzzy finder - https://github.com/junegunn/fzf
 if _exists fzf; then
+  _source ~/.config/fzf.zsh
   source <(fzf --zsh)
+  bindkey '\er' fzf-history-widget
 fi
 
 # Modern cd - https://github.com/ajeetdsouza/zoxide
 if _exists zoxide; then
   eval "$(zoxide init zsh)"
+  function _cd_zoxide {
+    if (( $# )); then
+      z "$@"
+    else
+      zi
+    fi
+  }
+  alias cd='_cd_zoxide'
+  compdef _cd _cd_zoxide
 fi
 
 # Enable iTerm shell integration
@@ -107,4 +118,9 @@ _source ~/.aliases.zsh
 # Private settings
 if [ -f ~/.zshrc.private.zsh ]; then
   source ~/.zshrc.private.zsh
+fi
+
+# Load project overrides after machine defaults; virtualenvs use autoswitch.
+if _exists direnv; then
+  eval "$(direnv hook zsh)"
 fi

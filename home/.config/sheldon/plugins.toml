@@ -20,6 +20,10 @@ shell = "zsh"
 [plugins.zsh-defer]
 github = "romkatv/zsh-defer"
 
+# Register completion directories before Oh My Zsh runs compinit.
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+
 # Framework - https://github.com/ohmyzsh/ohmyzsh
 [plugins.oh-my-zsh]
 github = "ohmyzsh/ohmyzsh"
@@ -45,16 +49,6 @@ apply = ["defer"]
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
 use = ["{{ name }}.zsh"]
-apply = ["defer"]
-
-# https://github.com/zsh-users/zsh-autosuggestions
-[plugins.zsh-completions]
-github = "zsh-users/zsh-completions"
-apply = ["defer"]
-
-# https://github.com/babarot/enhancd
-[plugins.enhancd]
-github = "b4b4r07/enhancd"
 apply = ["defer"]
 
 # Interactive git - https://github.com/wfxr/forgit

@@ -9,6 +9,7 @@ brew "bat"                       # https://github.com/sharkdp/bat
 cask "claude-code"               # https://claude.com/product/claude-code
 cask "codex"                     # https://openai.com/codex
 brew "delta"                     # https://github.com/dandavison/delta
+brew "direnv"                    # https://direnv.net
 brew "duf"                       # https://github.com/muesli/duf
 brew "duti"                      # https://github.com/moretension/duti
 brew "dust"                      # https://github.com/bootandy/dust

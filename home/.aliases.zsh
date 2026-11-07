@@ -24,10 +24,13 @@ fi
 alias open='open_command'
 
 # Shell shortcuts
+alias caff='caffeinate -i'
 alias c='clear'
 alias q="cd ~ && clear"
 alias e="$EDITOR"
 alias -g G="| rg"
+alias -g L='2>&1 | tee'
+alias -g C='| pbcopy'
 alias -- +x='chmod +x'
 alias x+='chmod +x'
 alias reload="source $HOME/.zshrc"
@@ -43,7 +46,7 @@ alias term='open -a iterm.app'
 [ -d ~/Desktop ] && alias dt='cd ~/Desktop'
 [ -d ~/dev ] && alias dev='cd ~/dev'
 function mkcd {
-  command mkdir -p $1 && cd $1
+  command mkdir -p -- "$1" && cd -- "$1"
 }
 
 # Files and networking
