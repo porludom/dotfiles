@@ -128,3 +128,9 @@ fi
 if _exists starship; then
   eval "$(starship init zsh)"
 fi
+
+# Local command history; keep Up Arrow and file search unchanged.
+if command -v atuin >/dev/null 2>&1; then
+  export ATUIN_CONFIG_DIR="$HOME/.config/atuin"
+  eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
+fi

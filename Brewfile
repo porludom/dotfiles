@@ -4,6 +4,7 @@
 # ------------------------------------------------------------------------------
 # CLI Tools
 # ------------------------------------------------------------------------------
+brew "atuin"                     # https://atuin.sh
 brew "asitop"                    # https://github.com/tlkh/asitop
 brew "bat"                       # https://github.com/sharkdp/bat
 cask "claude-code"               # https://claude.com/product/claude-code
