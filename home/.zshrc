@@ -124,3 +124,7 @@ fi
 if _exists direnv; then
   eval "$(direnv hook zsh)"
 fi
+
+if _exists starship; then
+  eval "$(starship init zsh)"
+fi

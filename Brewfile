@@ -27,6 +27,7 @@ brew "openconnect"               # https://infradead.org/openconnect
 brew "python@3.12"               # https://python.org
 brew "ripgrep"                   # https://github.com/BurntSushi/ripgrep
 brew "sheldon"                   # https://sheldon.cli.rs
+brew "starship"                  # https://starship.rs
 brew "superfile"                 # https://superfile.dev/
 brew "trash-cli"                 # https://github.com/andreafrancia/trash-cli
 brew "tldr"                      # https://tldr.sh
