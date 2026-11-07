@@ -12,6 +12,9 @@ Apply sections by intent: an action request phrased as a question is still an ac
   and maintenance.
 - Promptly report overruns/stalls: elapsed/expected time, blocker, next action and
   useful user help.
+- In operational updates, distinguish implemented, committed, prepared, deployed
+  and verified states; name the revision and host when relevant. Report only
+  relevant states and verification limits, without a boilerplate checklist.
 
 ## Questions and analysis
 
