@@ -59,10 +59,11 @@ apply_links() {
   link_file "$ROOT/codex/skills/dev-flow" "$HOME/.agents/skills/dev-flow" relink
   link_file "$ROOT/codex/AGENTS.md" "$HOME/.codex/AGENTS.md" relink
   link_file "$ROOT/codex/keybindings.json" "$HOME/.codex/keybindings.json" relink
-  if [[ ! -w /etc/codex ]]; then
-    sudo install -d -o "$(id -un)" /etc/codex
+  if [[ ! -e "$HOME/.codex/config.toml" && ! -L "$HOME/.codex/config.toml" ]]; then
+    mkdir -p -- "$HOME/.codex"
+    cp "$ROOT/codex/config.toml" "$HOME/.codex/config.toml"
+    log "Seeded local Codex config"
   fi
-  link_file "$ROOT/codex/config.toml" /etc/codex/config.toml preserve
   mkdir -p -- "$HOME/dev"
 }
 

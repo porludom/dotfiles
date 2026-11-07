@@ -23,8 +23,8 @@ Apply sections by intent: an action request phrased as a question is still an ac
 ## Code changes
 
 - Follow the applicable [Google style guide](https://google.github.io/styleguide/).
-- For Python quality checks, use `uvx ruff check` and `uvx mypy` with repository
-  configuration.
+- For Python quality checks, use repository entrypoints; otherwise use
+  `uvx ruff check` and `uvx mypy` with repository configuration.
 - Reuse repository check entrypoints. Consolidate repeatedly reconstructed commands;
   keep costly and remote checks explicit.
 - Comment only non-obvious rationale, constraints or pitfalls.
@@ -60,10 +60,9 @@ Apply sections by intent: an action request phrased as a question is still an ac
   previous owner stops.
 - Ownership applies across chats and agents. In a shared checkout, identify owners
   and write boundaries in the existing coordination view. Allow one writer per
-  overlapping boundary, including the Git index; serialize conflicts or use
-  separate worktrees. Continue independent work; read-only work may run in
-  parallel. Serialize shared host mutations.
-- Name one integration/index owner per shared checkout. Other writers hand off
+  overlapping boundary and one integration/index owner per checkout; serialize
+  conflicts or use separate worktrees. Continue independent and read-only work;
+  serialize shared host mutations. Other writers hand off
   their changes without staging or committing. Never commit the whole checkout
   while another writer is active; isolate overlapping or independently committed
   work in separate worktrees, or wait for the owner to release it.

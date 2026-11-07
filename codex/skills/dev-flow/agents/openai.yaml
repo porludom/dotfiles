@@ -1,6 +1,6 @@
 interface:
   display_name: "Development flow"
-  short_description: "Development approvals, tracking and delivery"
-  default_prompt: "Use $dev-flow for scoped development with plan/delivery approvals."
+  short_description: "Scoped development, reviews and delivery"
+  default_prompt: "Use $dev-flow for scoped development with risk-based reviews and explicit commit authorization."
 policy:
   allow_implicit_invocation: false

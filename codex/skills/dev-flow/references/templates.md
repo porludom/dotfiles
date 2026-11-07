@@ -25,7 +25,7 @@ findings, not copied approvals. Status/backlog link tasks rather than copying th
 # PROJ-017: Outcome
 
 Type: bug. State: Clarify.
-Approval: plan=pending; delivery=pending.
+Approval: implementation=authorized; plan=not-required; delivery=not-required; commit=pending.
 Progress: Input selection unresolved; next: clarify requirements.
 
 ## Overview
@@ -48,7 +48,8 @@ Capture requires title/ID, Type/State, Approval and Overview; full records add
 acceptance, Verification and Evidence. Optional Details hold contracts, decisions
 and caller examples. Overview and acceptance must stand alone.
 
-Approval owns gate state (pending/approved/waived), conditions and reviewed revision;
+Approval owns permissions and required gate state (pending/approved/waived/not-required),
+conditions and reviewed revision;
 Evidence owns verification. Keep the approved target, implemented boundary, pending
 amendments and applicable evidence near the top. Retain superseded decisions and
 approvals below as history.
@@ -56,7 +57,7 @@ approvals below as history.
 Types: feature, bug, refactor, research, docs, maintenance. Use maintenance for
 otherwise unclassified work; leave historical types unchanged.
 States: Backlog, Clarify, To Do, In Progress, Review, Done, Cancelled.
-Use Review only when awaiting plan/delivery approval; otherwise name the blocker
+Use Review only when awaiting a required plan/delivery approval; otherwise name the blocker
 under the current state with its unblock condition. Authorized work stays In Progress
 until only approval remains; add no review-specific states. Postponed work returns
 to Backlog with a reason.

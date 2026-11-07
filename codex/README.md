@@ -1,12 +1,11 @@
 # Codex
 
-`config.toml` links to `/etc/codex/config.toml` as shared defaults.
-Keep local overrides (models, machine paths, project trust and app state)
-in `~/.codex/config.toml`.
+Setup copies `config.toml` to `~/.codex/config.toml` only when missing.
+The local file owns effective settings, machine paths, project trust and app state.
+Tracked defaults are a starting template; later changes must be applied explicitly
+on each Mac. Setup preserves existing config and needs no `/etc/codex` link.
+Restart Codex after changing startup settings.
 
-Setup uses `sudo` once per Mac to make `/etc/codex` writable by your user,
-preserving existing config files or other links. Restart Codex to reload.
-
-Portable guidance lives here, linked as `~/.codex/AGENTS.md` and
-`~/.agents/skills/dev-flow`. Runtime state stays local. Invoke `$dev-flow`
-explicitly; after installing or moving the link, open a fresh chat to verify discovery.
+Portable guidance is linked as `~/.codex/AGENTS.md` and
+`~/.agents/skills/dev-flow`. Invoke `$dev-flow` explicitly; open a fresh chat after
+installation to verify discovery. Runtime state stays local.

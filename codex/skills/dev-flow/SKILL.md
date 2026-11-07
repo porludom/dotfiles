@@ -1,6 +1,6 @@
 ---
 name: dev-flow
-description: "Explicit plan/delivery approvals, verification budgets and task tracking for development work."
+description: "Scoped development, risk-based reviews, verification budgets and task tracking."
 ---
 
 # Development flow
@@ -11,22 +11,19 @@ task and current coordination state without replaying completed phases.
 
 ## Approvals
 
-Default: **plan → approval → implement/verify → delivery approval → commit**.
-Agree new-project requirements/UX before architecture. Plans state behavior,
-owners/dependencies, acceptance and verification limits. Investigate consequential
-unknowns. Require independent review for shared-contract changes, consequential
-failure risks or explicit requests; otherwise use owner verification. Resolve
-findings before user review; mechanical/type changes need no separate plan review.
+A bounded action request authorizes implementation and routine verification.
+Ask for a plan decision only when consequential choices remain unresolved or the
+user requests a plan first. Agree new-project requirements/UX before architecture.
+Plans state behavior, owners/dependencies, acceptance and verification limits.
+Require design review for consequential shared-contract decisions and independent
+implementation review for consequential runtime risks; otherwise use owner
+verification. Explicit review requests prevail. Resolve findings before delivery.
 
-Permissions for implementation, verification, final review and delivery/commit
-may be granted together with explicit scope/time limits. Reuse them; never infer
-approval from silence or urgency. Reopen consequential amendments. Delivery
-approval applies to a frozen diff/revision; relevant edits invalidate only the
-affected approval. Waivers name the scope and skipped phases.
-
-Only meaning-preserving documentation/comment edits with an inspectable diff and
-no external mutation, deployment, deletion or migration may skip both gates.
-Explicit review requirements still apply.
+Reuse approval within its scope/time limits; never infer it from silence or
+urgency. Reopen consequential amendments. Commit authorization remains explicit
+and may be granted with implementation. When delivery approval is requested,
+freeze its diff/revision; relevant edits invalidate only the affected approval.
+Waivers name scope and skipped phases.
 
 For refactors, agree behavior, removals and contract changes; use the proposal required
 by global guidance. Define acceptance for caller paths and responsibility
@@ -51,8 +48,9 @@ Task-specific restrictions override standing permission.
 Other integration, end-to-end and load/performance tests need explicit approval;
 propose them together and explain why cheaper proof is insufficient. Keep separate
 GPU-experiment and deployment gates. Do not relabel tests as smoke or treat test
-approval as external access. Feasibility has a shared 15-minute default budget;
-it does not waive test approval.
+approval as external access. After 15 minutes of elapsed investigation, report
+findings and propose further work unless a larger budget is approved. This is
+not a task limit or test authorization.
 
 Record checked revision/diff, results/references and relevant later edits once in
 task evidence. Shared API changes must exercise public callers and affected
@@ -62,7 +60,8 @@ implementations. Markdown needs reading/link/whitespace checks, not app tests.
 
 Use the [document map/templates](references/templates.md), preserving unrelated
 docs. Keep each fact with its owner. Bounded work may use a concise task entry;
-tiny edits need none. Extra plan/progress/handoff files require approval.
+tiny edits need none. Create extra plan/progress/handoff files only when requested
+or necessary; prefer existing records.
 Check scope, approvals, acceptance and evidence at gates; preserve decisions,
 conditions, waivers and gaps before compaction.
 
@@ -91,7 +90,8 @@ obsolete shims, retaining resource safety and evidence. For production, follow
 project policy; absent one, use a branch per batch and an authorized PR/MR.
 Push, PR creation, merge, history rewrite and remote deletion need authorization.
 
-After delivery approval/waiver, make one local task commit unless prohibited;
+Commit only when explicitly authorized, after required verification and any
+requested delivery approval; make one local task commit unless prohibited;
 no WIP/planning commits or dependencies on unaccepted work. Wait or review dependent
 work together. The integration owner stages owned hunks, reviews the staged diff,
 excludes secrets/generated artifacts and reports inseparable changes. Use an
