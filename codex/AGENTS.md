@@ -66,11 +66,15 @@ Apply sections by intent: an action request phrased as a question is still an ac
   alone do not require workers.
 - One owner delivers code, tests and docs; reassign boundaries only after the
   previous owner stops.
-- Ownership applies across chats and agents. In a shared checkout, identify owners
-  and write boundaries in the existing coordination view. Allow one writer per
-  overlapping boundary and one integration/index owner per checkout; serialize
-  conflicts or use separate worktrees. Continue independent and read-only work;
-  serialize shared host mutations. Other writers hand off
-  their changes without staging or committing. Never commit the whole checkout
-  while another writer is active; isolate overlapping or independently committed
-  work in separate worktrees, or wait for the owner to release it.
+- Before implementation, check existing coordination state and worktrees. When
+  another implementation task is active in the repository, default to a separate
+  task worktree before editing: reuse a suitable one owned by this task or create
+  one without asking. A lone task may reuse the current checkout. If concurrency
+  begins later, isolate owned edits before further writes; preserve others' work.
+- Ownership applies across chats and agents. Record owners and write boundaries
+  in the existing coordination view. Allow one writer per overlapping boundary
+  and one integration/index owner per checkout. Serialize integration into `main`
+  and shared host mutations, including across worktrees. In a shared checkout,
+  other writers hand off without staging or committing; never commit the whole
+  checkout while another writer is active. Wait or isolate work when ownership
+  overlaps; continue independent and read-only work.
