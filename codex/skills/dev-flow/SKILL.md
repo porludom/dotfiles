@@ -27,8 +27,8 @@ context, not full-chat forks. Workers perform assigned phases, escalate
 decisions and stop when finished. They cannot repeat approval requests, commit,
 edit shared tracking or delegate unless assigned.
 
-Reuse workers for coherent assignments; reactivate completed workers before
-waiting. Bound logs, keep details outside chat and avoid polling unchanged
+Reuse workers for coherent assignments; avoid waiting on inactive workers.
+Bound logs, keep details outside chat and avoid polling unchanged
 status. Route worker delays through main; update coordination before
 handoff/compaction.
 
@@ -42,22 +42,28 @@ material design/behavior changes, costly failure risks and explicit requests for
 independent review; clear mechanical/type changes need no separate plan review.
 Review cohesive batches and resolve findings before user review.
 
-Reuse scoped approvals; implementation approval never grants delivery approval.
-Reopen consequential amendments. Freeze each delivered diff/revision for
-approval; later edits invalidate its approval without stopping unrelated work.
+Reuse approvals within their scope and duration. Implementation, verification,
+final review and delivery/commit permissions are independent; waivers affect only
+named phases. Reopen consequential amendments. Freeze each delivered diff/revision
+for approval; later relevant edits invalidate approval only for the affected scope.
 Never infer approval from silence/urgency. Only meaning-preserving
 documentation/comment edits with an inspectable diff and no external mutation,
 deployment, deletion or migration may skip both gates. Explicit review
 requirements prevail; other shortcuts need a waiver naming scope and skipped
 phases.
 
-For refactors, agree behavior, removals and contract changes. For a changed
-shared API, include a short caller example and identify where shared behavior
-belongs. Acceptance must prove the requested API/ownership structure as well as
-output behavior. Honor deletion-before-restructuring requests; moves, wrappers
-and extra modes do not satisfy removals. Report net production LOC for
-substantial reductions, including replacements; it is evidence, not a quota.
-Update affected requirements/design together.
+For refactors, agree behavior, removals and contract changes. Before approving a
+shared API refactor, show representative caller code, responsibility boundaries
+and important failure behavior. For simplification, identify concrete deletions,
+replacements and why remaining abstractions are needed. Define acceptance for
+these boundaries and caller paths. Repeated corrections about the same
+responsibility require reassessing the design and proposing a coherent amendment
+before further implementation in that area.
+
+Honor deletion-before-restructuring requests; moves, wrappers and extra modes do
+not satisfy removals. Report remaining caller responsibilities and net production
+LOC for substantial reductions, including replacements; LOC is evidence, not a
+quota.
 
 ## Verification
 
@@ -66,8 +72,9 @@ other tests require explicit approval**, including integration, end-to-end and
 load/performance. Do not relabel workflows as smoke. Test permission grants no
 external access/resources.
 
-Propose broader checks together: purpose, duration, scope/limits and why cheaper
-proof is insufficient. Reuse scoped permission; ask before extending it.
+Propose broader checks together, preferably with the implementation plan: purpose,
+duration, scope/limits and why cheaper proof is insufficient. Reuse scoped
+permission; ask before extending it.
 Feasibility starts with a shared 15-minute budget unless explicitly scaled; this
 does not waive test approval.
 
@@ -80,9 +87,8 @@ application tests.
 
 Use the [document map/templates](references/templates.md); do not migrate
 unrelated docs. Keep facts with their owner and update only when they change.
-Preserve approval history and distinguish approved targets from delivered/tested
-behavior. Bounded work may reuse a concise task entry; tiny edits need no
-record. Check scope, approvals, acceptance and evidence at gates. Extra
+Bounded work may reuse a concise task entry; tiny edits need no record.
+Check scope, approvals, acceptance and evidence at gates. Extra
 plan/progress/handoff files require approval.
 
 Before compacting status, preserve decisions, conditions, waivers, evidence and
@@ -95,9 +101,9 @@ incorporates side decisions.
 
 Default to pre-production until explicitly promoted: reuse the default
 branch/checkout; no task branches/PRs or compatibility unless requested. Update
-consumers/remove obsolete shims; retain resource safety and evidence. Production
-follows project policy; otherwise use a branch per batch and PR/MR when
-authorized. Push/PR creation, merge, history rewrite and remote deletion need
+consumers/remove obsolete shims; retain resource safety and evidence. In production,
+follow project policy; if none exists, use a branch per batch and an authorized
+PR/MR. Push/PR creation, merge, history rewrite and remote deletion need
 authorization.
 
 After delivery approval/valid waiver, make one local task commit unless

@@ -2,7 +2,6 @@
 
 Process: [SKILL.md](../SKILL.md). Common rules: [global AGENTS.md](../../../AGENTS.md).
 Use relevant sections; adapt headings/order.
-Preserve existing plans, approvals and concurrent entries.
 
 ## Document map
 
@@ -50,18 +49,23 @@ and Evidence. Optional Details hold decisions/contracts/dependencies and caller 
 and checklist must read independently. Approval owns gates (pending/approved/waived), conditions
 and reviewed diff/revision; do not duplicate them in Evidence.
 
+For iterative work, keep the current contract and pending amendments near the top.
+Separate the approved target, latest implemented boundary and applicable evidence.
+When amendments supersede decisions, update this summary and the next action;
+retain prior approvals and decisions below as history, not competing instructions.
+
 Types: feature, bug, improvement, refactor, research, docs, maintenance, task.
 States: Backlog (captured/queued), Clarify (questions), To Do (scoped), In Progress (authorized work),
 Review (awaiting plan/delivery approval), Done (accepted), Cancelled (abandoned).
 
-Use Review when only waiting; ongoing authorized work stays In Progress with its pending gate named.
+Use Review when only awaiting plan/delivery approval; otherwise retain the appropriate state
+and name the blocker. Ongoing authorized work stays In Progress with its pending gate named.
 Add no review-specific states. Record blockers/unblock conditions. Postponement returns to Backlog
 with a reason; retain cancellation reasons and Done records. Done requires accepted scope/resolved gates.
 
-Progress: `milestone; next gate/blocker`. Optional percentages estimate selected work, not checkboxes
-or fixed state values; label phase-only estimates. Deferred required checks remain incomplete;
-unapproved optional work does not reduce progress. Revise estimates on scope change, retain them
-while blocked and name the blocker. 100% means Done, without strengthening proof limits.
+Progress: `milestone; next gate/blocker`. Percentages are optional estimates of selected work;
+label phase-only estimates and revise on scope changes. Deferred required checks remain incomplete;
+unapproved optional work does not reduce progress. 100% means Done, without strengthening proof limits.
 
 ## Status
 
