@@ -201,4 +201,7 @@ setup_macos() {
   duti -s com.microsoft.VSCode net.daringfireball.markdown all
 
   killall Finder
+
+  info "Installing shared iTerm preferences..."
+  python3 iterm2/install.py
 }

@@ -65,3 +65,8 @@ SPACESHIP_RPROMPT_ORDER=(
 # Time settings
 SPACESHIP_TIME_SHOW=true
 SPACESHIP_TIME_12HR=true
+
+# Keep the machine visible even locally; highlight SSH hosts separately.
+SPACESHIP_HOST_SHOW=always
+SPACESHIP_HOST_COLOR=cyan
+SPACESHIP_HOST_COLOR_SSH=yellow
