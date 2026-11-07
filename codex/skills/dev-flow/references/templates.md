@@ -24,9 +24,9 @@ findings, not copied approvals. Status/backlog link tasks rather than copying th
 ```markdown
 # PROJ-017: Outcome
 
-Type: bug. State: Clarify.
-Approval: implementation=authorized; plan=not-required; delivery=not-required; commit=authorized (global policy).
-Progress: Input selection unresolved; next: clarify requirements.
+Type: [type]. State: [state].
+Approval: [scope, permissions and any required gates].
+Progress: [milestone; next action or blocker].
 
 ## Overview
 
@@ -74,11 +74,12 @@ unapproved optional work does not reduce progress. 100% means Done.
 Maturity: pre-production.
 Baseline: [Revision/evidence.]
 Shared limits: [Constraints; link tasks.]
-Integration/index owner: [One chat/agent for this checkout.]
+Coordinator: [Owner and authoritative coordination location].
+Integration/index owner: [One per checkout; target-branch integrator].
 
 | Task | Owner/chat | Checkout / write boundary | Dependency/resource | Coordination |
 | --- | --- | --- | --- | --- |
-| [PROJ-017](backlog/PROJ-017.md) | chat-a | checkout A: src/feature/ | Shared host | Wait for PROJ-016 to release it |
+| [PROJ-017](backlog/PROJ-017.md) | chat-a | /path/to/worktree: src/feature/ | Shared host | Base: COMMIT; target: main; integrator: chat-b |
 ```
 
 ## Backlog
@@ -103,8 +104,9 @@ Next new ID: PROJ-018.
 [Accepted task links; same columns.]
 ```
 
-Reserve IDs by exclusive creation; retry collisions, never overwrite/reuse. Serialize index writes
-or re-read/merge/retry, preserving concurrent rows and the highest counter.
+The coordinator allocates IDs before dispatch and owns cross-worktree status/backlog
+updates. Workers return updates for integration; never allocate from independent
+worktree counters or overwrite/reuse IDs.
 
 ## Worker handoffs
 

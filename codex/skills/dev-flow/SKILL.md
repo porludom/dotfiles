@@ -26,9 +26,9 @@ Waivers name scope and skipped phases.
 ## Verification
 
 Unless restricted, unit, lint/type and brief health/startup smoke checks need no
-separate approval. Include selected local integration checks in the plan with
-purpose/commands, time budget, scope and external resource limits. Plan approval
-includes that package unless excluded; ask again only to extend its limits.
+separate approval. Agree local integration checks in the request, a plan or
+standing repository permission: commands, time budget, scope and external resource
+limits. Reuse that permission; ask again only to extend its limits.
 
 Reuse explicitly approved standing offline budgets within their listed commands,
 time/resource limits and validity; past runs do not establish permission.
@@ -66,6 +66,24 @@ not full-chat forks. Workers stop after assigned phases and return decisions/blo
 they do not edit shared tracking or delegate unless assigned. Route approval
 questions and delays through the coordinator. Reuse workers for coherent assignments;
 bound logs and avoid unchanged-status polling or waiting on inactive workers.
+
+## Worktrees and review
+
+Reuse a suitable task-owned worktree before creating one. Record its path,
+starting commit, target branch and owner with the coordinator; worktree records
+hold assigned scope, not independent cross-task coordination. Allocate task IDs
+through that coordinator before dispatch to avoid collisions across checkouts.
+Carry dirty changes only when in scope; never reset or stash another owner's work.
+
+Verify in the worktree with its own environment and outputs. Share download
+caches, not editable virtualenvs; preserve shared-resource ownership. Worktree
+preparation must not alter live installations.
+
+For review, give the worktree path and recorded base, covering committed,
+uncommitted and untracked changes. Open that folder in VS Code for Changes;
+compare committed work against the base. The target checkout's owner integrates
+through one agreed route and verifies affected behavior. Follow global cleanup
+policy; use Codex for managed worktrees and Git for other worktrees.
 
 ## Delivery
 
