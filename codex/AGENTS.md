@@ -69,12 +69,13 @@ Apply sections by intent: an action request phrased as a question is still an ac
   changes into `main` and making a local commit after required verification.
   This is standing authorization for local commits and integration, not pushing
   or deployment. Respect the checkout's integration owner and unrelated changes.
-- After integration, remove completed task worktrees and prune stale worktree
-  records. Record the integration commit and any worktree retention reason in the
-  chat handoff; add no separate tracking process. Compare content and history
-  before treating dirty worktrees as unfinished. Verify their
-  changes are in `main`; preserve uncommitted work, ignored data, evidence and
-  running previews. Keep a worktree while an active owner or runtime needs it.
+- Finish integration by removing completed task worktrees and deleting their local
+  task branches, then prune stale worktree records. Verify their work is in `main`
+  using content and history before deletion; dirty status alone does not mean
+  unfinished work. Preserve uncommitted work, ignored data, evidence and previews.
+  Retain branches/worktrees while an active owner or runtime needs them, or their
+  integration is unproven. Report the integration commit and any retention reason
+  in the chat handoff; add no separate tracking process.
 
 ## Delegation and shared work
 
