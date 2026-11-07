@@ -1,6 +1,6 @@
 ---
 name: dev-flow
-description: "Scoped development, risk-based reviews, verification budgets and task tracking."
+description: "Scoped development, risk-based reviews and verification budgets."
 ---
 
 # Development flow
@@ -44,35 +44,30 @@ not a task limit or test authorization.
 Shared API checks cover public callers and affected implementations. For Markdown,
 read the diff and check links/whitespace; do not run app tests.
 
-## Records
+## Documentation
 
-Use the [document map/templates](references/templates.md) when recording work.
-Keep each fact with its owner. Bounded work may use a concise task entry;
-tiny edits need none. Create extra plan/progress/handoff files only when requested
-or necessary; prefer existing records.
-Preserve decisions, approval conditions, evidence gaps and next action before compaction.
-
-`/side Capture` creates only a task/index entry with outcome, constraints/questions
-and approval state. Return its ID/link and stop; do not select work, implement,
-change existing status/contracts or commit. Main incorporates side decisions.
+Keep only durable documentation that helps someone use, operate or change the
+project: quickstart, non-obvious contracts/design decisions, operations/recovery
+and check entrypoints. Use existing files; create separate docs only when their
+content warrants it. Do not prescribe a directory structure or copy chat history.
+Preserve decisions, approval conditions, evidence gaps and next action in chat
+before compaction.
 
 ## Delegation
 
 When delegating, prefer built-in roles; custom profiles need recurring benefit.
 If required delegation is unavailable/prohibited, report it and obtain a fallback.
 
-Use scoped [handoffs](references/templates.md#worker-handoffs) with minimal context,
-not full-chat forks. Workers stop after assigned phases and return decisions/blockers;
-they do not edit shared tracking or delegate unless assigned. Route approval
+Give workers outcome, exclusive boundary, dependencies, permitted checks/budget
+and done condition in chat with minimal context, not full-chat forks. Workers
+return changes, evidence and blockers; they do not delegate unless assigned. Route approval
 questions and delays through the coordinator. Reuse workers for coherent assignments;
 bound logs and avoid unchanged-status polling or waiting on inactive workers.
 
 ## Worktrees and review
 
-Reuse a suitable task-owned worktree before creating one. Record its path,
-starting commit, target branch and owner with the coordinator; worktree records
-hold assigned scope, not independent cross-task coordination. Allocate task IDs
-through that coordinator before dispatch to avoid collisions across checkouts.
+Reuse a suitable task-owned worktree before creating one. Include its path,
+starting commit, target branch, owner and assigned scope in the chat handoff.
 Carry dirty changes only when in scope; never reset or stash another owner's work.
 
 Verify in the worktree with its own environment and outputs. Share download

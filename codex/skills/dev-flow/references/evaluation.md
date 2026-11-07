@@ -1,13 +1,13 @@
 # Workflow evaluation
 
 Use when changing dev-flow or shared guidance. Audit against the request, global
-AGENTS.md, templates and invocation policy. Validate the skill, links and whitespace;
+AGENTS.md and invocation policy. Validate the skill, links and whitespace;
 these checks do not prove better agent behavior.
 
 ## Representative cases
 
 Invoke dev-flow explicitly in a frozen scratch repository containing the relevant
-code, tests and task record. Give the agent the request; keep expectations with
+code, tests and chat context. Give the agent the request; keep expectations with
 the evaluator.
 
 | Case | Request | Expected outcome |

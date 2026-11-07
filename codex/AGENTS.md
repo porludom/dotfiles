@@ -25,6 +25,8 @@ Apply sections by intent: an action request phrased as a question is still an ac
   needed; clarify consequential gaps and distinguish facts from assumptions or
   uncertainty.
 - Mentioning code does not itself call for implementation, tests or task tracking.
+- Keep task progress, approvals and handoffs in chat; do not create or maintain
+  backlog, status or task-tracking documents unless explicitly requested.
 
 ## Code changes
 
@@ -69,8 +71,8 @@ Apply sections by intent: an action request phrased as a question is still an ac
   or deployment. Respect the checkout's integration owner and unrelated changes.
 - After integration, remove completed task worktrees and prune stale worktree
   records. Record the integration commit and any worktree retention reason in the
-  existing handoff or task record; add no separate tracking process. Compare
-  content and history before treating dirty worktrees as unfinished. Verify their
+  chat handoff; add no separate tracking process. Compare content and history
+  before treating dirty worktrees as unfinished. Verify their
   changes are in `main`; preserve uncommitted work, ignored data, evidence and
   running previews. Keep a worktree while an active owner or runtime needs it.
 
@@ -81,14 +83,14 @@ Apply sections by intent: an action request phrased as a question is still an ac
   alone do not require workers.
 - One owner delivers code, tests and docs; reassign boundaries only after the
   previous owner stops.
-- Before implementation, check existing coordination state and worktrees. When
+- Before implementation, check active chats, ownership and worktrees. When
   another implementation task is active in the repository, default to a separate
   task worktree before editing: reuse a suitable one owned by this task or create
   one without asking. A lone task may reuse the current checkout. If concurrency
   begins later, isolate owned edits before further writes; preserve others' work.
-- Ownership applies across chats and agents. Record owners and write boundaries
-  in the existing coordination view. Allow one writer per overlapping boundary
-  and one integration/index owner per checkout. Serialize integration into `main`
+- Ownership applies across chats and agents. State owners and write boundaries
+  in chat. Allow one writer per overlapping boundary and one integration/index
+  owner per checkout. Serialize integration into `main`
   and shared host mutations, including across worktrees. In a shared checkout,
   other writers hand off without staging or committing; never commit the whole
   checkout while another writer is active. Wait or isolate work when ownership
