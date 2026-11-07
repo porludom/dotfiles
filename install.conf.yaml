@@ -4,16 +4,8 @@
       create: true
       relink: true
       force: true
-    shell:
-      stdin: true
-      stdout: true
-      stderr: true
 
 - clean: ["~"]
-
-- shell:
-    - description: Prepare shared Codex config directory
-      command: test -w /etc/codex || sudo install -d -o "$(id -un)" /etc/codex
 
 - link:
     ~/:
@@ -42,21 +34,3 @@
 
 - create:
     ~/dev:
-
-- shell:
-    - description: Update packet managers
-      command: source scripts/bootstrap && update_linux && install_clt && install_homebrew
-
-    - description: Install software
-      command: source scripts/bootstrap && install_software
-
-    - description: Install python
-      command: source scripts/bootstrap && install_python 3.12
-
-    - description: Setup macos
-      command: source scripts/bootstrap && setup_macos
-
-    - description: Enable VSCode/iTerm2 settings synchronization
-      command: if [ "$(uname)" = Darwin ]; then python3 sync.py --setup; fi
-
-    - source scripts/bootstrap && on_finish

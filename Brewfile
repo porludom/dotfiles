@@ -52,10 +52,11 @@ brew "zoxide"                    # https://github.com/ajeetdsouza/zoxide
 cask "arc"                       # https://arc.net
 cask "chatgpt"                   # https://chatgpt.com
 # cask "claude"                    # https://claude.com/product/overview
-cask "discord"                   # https://discord.com
+# cask "discord"                   # https://discord.com
 cask "iina"                      # https://iina.io
 cask "notion"                    # https://notion.com
 cask "spotify"                   # https://spotify.com
+cask "readdle-spark"             # https://sparkmailapp.com
 cask "steam"                     # https://store.steampowered.com
 cask "telegram"                  # https://telegram.org
 # cask "whisky"                    # https://getwhisky.app
@@ -97,5 +98,4 @@ mas "MyWallpaper", id: 1552826194
 
 mas "GoodNotes", id: 1444383602
 mas "Notability", id: 360593530
-mas "Spark", id: 1176895641
 mas "The Unarchiver",  id: 425424353
