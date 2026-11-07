@@ -30,6 +30,8 @@ Apply sections by intent: an action request phrased as a question is still an ac
 - Comment only non-obvious rationale, constraints or pitfalls.
 - Before nontrivial implementation, assess responsibilities, reuse, alternatives
   and failure costs.
+- For substantial architecture changes, show a representative caller, responsibility
+  owners, concrete deletions and retained failure guarantees before implementation.
 - Put concrete shared behavior/contracts in base classes; avoid speculative
   abstractions. Propose useful structural changes; obtain approval for substantial
   changes and update affected requirements/design.
@@ -61,3 +63,7 @@ Apply sections by intent: an action request phrased as a question is still an ac
   overlapping boundary, including the Git index; serialize conflicts or use
   separate worktrees. Continue independent work; read-only work may run in
   parallel. Serialize shared host mutations.
+- Name one integration/index owner per shared checkout. Other writers hand off
+  their changes without staging or committing. Never commit the whole checkout
+  while another writer is active; isolate overlapping or independently committed
+  work in separate worktrees, or wait for the owner to release it.

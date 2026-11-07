@@ -1,120 +1,103 @@
 ---
 name: dev-flow
-description: "Explicit plan/delivery approvals, test permissions and task tracking for development work."
+description: "Explicit plan/delivery approvals, verification budgets and task tracking for development work."
 ---
 
-# Development Flow
+# Development flow
 
-Apply only when invoked, including continuations. Follow [global
-AGENTS.md](../../AGENTS.md) for common rules; this skill adds process, not
-access permissions. Resume assigned tasks/contracts and concurrent status
-without replaying completed phases.
+Apply only when invoked, including continuations. Inherit common rules from
+`~/.codex/AGENTS.md`; this skill grants no access permissions. Resume the assigned
+task and current coordination state without replaying completed phases.
 
-## Repository guidance
+## Approvals
 
-On first use, ensure active AGENTS.md/AGENTS.override.md conditionally
-references dev-flow, preserving other guidance. During read-only work, report
-missing guidance without editing it.
+Default: **plan → approval → implement/verify → delivery approval → commit**.
+Agree new-project requirements/UX before architecture. Plans state behavior,
+owners/dependencies, acceptance and verification limits. Investigate consequential
+unknowns. Require independent review for shared-contract changes, consequential
+failure risks or explicit requests; otherwise use owner verification. Resolve
+findings before user review; mechanical/type changes need no separate plan review.
 
-## Team and scope
+Permissions for implementation, verification, final review and delivery/commit
+may be granted together with explicit scope/time limits. Reuse them; never infer
+approval from silence or urgency. Reopen consequential amendments. Delivery
+approval applies to a frozen diff/revision; relevant edits invalidate only the
+affected approval. Waivers name the scope and skipped phases.
 
-Main owns workflow coordination and Git. Prefer built-in roles; custom profiles
-need recurring benefit. Report the limitation and obtain a fallback if required
-delegation is unavailable/prohibited.
+Only meaning-preserving documentation/comment edits with an inspectable diff and
+no external mutation, deployment, deletion or migration may skip both gates.
+Explicit review requirements still apply.
 
-Use scoped [handoffs](references/templates.md#worker-handoffs) and minimal
-context, not full-chat forks. Workers perform assigned phases, escalate
-decisions and stop when finished. They cannot repeat approval requests, commit,
-edit shared tracking or delegate unless assigned.
-
-Reuse workers for coherent assignments; avoid waiting on inactive workers.
-Bound logs, keep details outside chat and avoid polling unchanged
-status. Route worker delays through main; update coordination before
-handoff/compaction.
-
-## Planning and approvals
-
-Default: **plan → user approval → implement/verify → user approval → commit**.
-Agree new-project requirements/UX before architecture. Plans cover behavior,
-owners/dependencies, acceptance and limits; keep clear plans brief. Add design
-investigation only for consequential open decisions. Independently review
-material design/behavior changes, costly failure risks and explicit requests for
-independent review; clear mechanical/type changes need no separate plan review.
-Review cohesive batches and resolve findings before user review.
-
-Reuse approvals within their scope and duration. Implementation, verification,
-final review and delivery/commit permissions are independent; waivers affect only
-named phases. Reopen consequential amendments. Freeze each delivered diff/revision
-for approval; later relevant edits invalidate approval only for the affected scope.
-Never infer approval from silence/urgency. Only meaning-preserving
-documentation/comment edits with an inspectable diff and no external mutation,
-deployment, deletion or migration may skip both gates. Explicit review
-requirements prevail; other shortcuts need a waiver naming scope and skipped
-phases.
-
-For refactors, agree behavior, removals and contract changes. Before approving a
-shared API refactor, show representative caller code, responsibility boundaries
-and important failure behavior. For simplification, identify concrete deletions,
-replacements and why remaining abstractions are needed. Define acceptance for
-these boundaries and caller paths. Repeated corrections about the same
-responsibility require reassessing the design and proposing a coherent amendment
-before further implementation in that area.
-
-Honor deletion-before-restructuring requests; moves, wrappers and extra modes do
-not satisfy removals. Report remaining caller responsibilities and net production
-LOC for substantial reductions, including replacements; LOC is evidence, not a
-quota.
+For refactors, agree behavior, removals and contract changes; use the proposal required
+by global guidance. Define acceptance for caller paths and responsibility
+boundaries; justify retained abstractions. Repeated ownership corrections require
+a coherent design amendment before further implementation. Moves, wrappers and
+extra modes do not satisfy deletions; honor deletion-before-restructuring requests.
+For substantial reductions, report remaining caller responsibilities and net production LOC, including
+replacements; LOC is evidence, not a quota.
 
 ## Verification
 
-Unit and brief health/startup smoke checks need no separate test approval. **All
-other tests require explicit approval**, including integration, end-to-end and
-load/performance. Do not relabel workflows as smoke. Test permission grants no
-external access/resources.
+Unless restricted, unit, lint/type and brief health/startup smoke checks need no
+separate approval. Include selected local integration checks in the plan with
+purpose/commands, time budget, scope and external resource limits. Plan approval
+includes that package unless excluded; ask again only to extend its limits.
 
-Propose broader checks together, preferably with the implementation plan: purpose,
-duration, scope/limits and why cheaper proof is insufficient. Reuse scoped
-permission; ask before extending it.
-Feasibility starts with a shared 15-minute budget unless explicitly scaled; this
-does not waive test approval.
+Repositories may record an explicitly approved standing offline verification
+budget in existing guidance: commands, per-task time/resource limits and expiry
+or revocation conditions. Reuse it within scope; do not infer one from past runs.
+Task-specific restrictions override standing permission.
 
-Record the checked revision/diff, result/reference and relevant later edits once
-in task evidence. For changed shared APIs, exercise the public caller path and
-affected implementations. Markdown needs reading/link/whitespace checks, not
-application tests.
+Other integration, end-to-end and load/performance tests need explicit approval;
+propose them together and explain why cheaper proof is insufficient. Keep separate
+GPU-experiment and deployment gates. Do not relabel tests as smoke or treat test
+approval as external access. Feasibility has a shared 15-minute default budget;
+it does not waive test approval.
 
-## Documentation and tracking
+Record checked revision/diff, results/references and relevant later edits once in
+task evidence. Shared API changes must exercise public callers and affected
+implementations. Markdown needs reading/link/whitespace checks, not app tests.
 
-Use the [document map/templates](references/templates.md); do not migrate
-unrelated docs. Keep facts with their owner and update only when they change.
-Bounded work may reuse a concise task entry; tiny edits need no record.
-Check scope, approvals, acceptance and evidence at gates. Extra
-plan/progress/handoff files require approval.
+## Records
 
-Before compacting status, preserve decisions, conditions, waivers, evidence and
-gaps in task records. `/side Capture` creates only a short task/index entry:
-outcome, constraints/questions and approval state. Do not select work,
-implement, change status/contracts or commit; return ID/link and stop. Main
-incorporates side decisions.
+Use the [document map/templates](references/templates.md), preserving unrelated
+docs. Keep each fact with its owner. Bounded work may use a concise task entry;
+tiny edits need none. Extra plan/progress/handoff files require approval.
+Check scope, approvals, acceptance and evidence at gates; preserve decisions,
+conditions, waivers and gaps before compaction.
 
-## Maturity, Git and delivery
+`/side Capture` creates only a task/index entry with outcome, constraints/questions
+and approval state. Return its ID/link and stop; do not select work, implement,
+change existing status/contracts or commit. Main incorporates side decisions.
 
-Default to pre-production until explicitly promoted: reuse the default
-branch/checkout; no task branches/PRs or compatibility unless requested. Update
-consumers/remove obsolete shims; retain resource safety and evidence. In production,
-follow project policy; if none exists, use a branch per batch and an authorized
-PR/MR. Push/PR creation, merge, history rewrite and remote deletion need
-authorization.
+## Delegation
 
-After delivery approval/valid waiver, make one local task commit unless
-prohibited; no WIP/planning commits. Do not commit dependencies on unaccepted
-work: wait or review together. Main stages owned hunks, checks the staged diff,
+Main coordinates; the checkout's integration owner controls Git under global
+ownership rules. Prefer built-in roles; custom profiles need recurring benefit.
+If required delegation is unavailable/prohibited, report it and obtain a fallback.
+
+Use scoped [handoffs](references/templates.md#worker-handoffs) with minimal context,
+not full-chat forks. Workers stop after assigned phases and return decisions/blockers;
+they cannot repeat approval requests, commit, edit shared tracking or delegate
+unless assigned. Reuse workers for coherent assignments; route delays through
+main. Bound logs, avoid unchanged-status polling and waiting on inactive workers;
+update coordination before handoff/compaction.
+
+## Git and delivery
+
+Default to pre-production until promoted: reuse the default checkout/branch;
+no task branches/PRs or compatibility unless requested. Update consumers and remove
+obsolete shims, retaining resource safety and evidence. For production, follow
+project policy; absent one, use a branch per batch and an authorized PR/MR.
+Push, PR creation, merge, history rewrite and remote deletion need authorization.
+
+After delivery approval/waiver, make one local task commit unless prohibited;
+no WIP/planning commits or dependencies on unaccepted work. Wait or review dependent
+work together. The integration owner stages owned hunks, reviews the staged diff,
 excludes secrets/generated artifacts and reports inseparable changes. Use an
-imperative `type(scope): outcome`; add task IDs, limits or approved breaking
-changes as useful.
+imperative `type(scope): outcome`, adding task IDs/limits/breaking changes as useful.
 
-Stop at acceptance; queue unrelated ideas. Deliver outcome/files, proof limits
-and approval/commit disposition. End with **Next:** exact input/action or
-finished; do not select another batch. For workflow changes, use the
-[evaluation cases](references/evaluation.md); report conflicts and verification
-limits.
+Deliver outcome/files, proof limits and approval/commit disposition. Stop at
+acceptance; queue unrelated ideas. End with **Next:** exact action/input or finished;
+do not select another batch. For workflow changes, use the
+[evaluation cases](references/evaluation.md) and report verification limits.

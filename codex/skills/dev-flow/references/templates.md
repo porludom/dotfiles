@@ -1,7 +1,6 @@
 # Documents and records
 
-Process: [SKILL.md](../SKILL.md). Common rules: [global AGENTS.md](../../../AGENTS.md).
-Use relevant sections; adapt headings/order.
+Use relevant sections; adapt headings/order. Process: [SKILL.md](../SKILL.md).
 
 ## Document map
 
@@ -37,35 +36,34 @@ Progress: Input selection unresolved; next: clarify requirements.
 
 - [ ] [Observable behavior and requested API/ownership structure, if changed.]
 
-Verification: [Risks, permitted checks and limits.]
+Verification: [Risks, selected commands, time budget, external resource limits
+and whether plan approval includes these checks.]
 
 ## Evidence
 
 [Checked boundary/revision, results/references and gaps.]
 ```
 
-Capture needs title/ID, Type/State, Approval and Overview. Full records add acceptance, Verification
-and Evidence. Optional Details hold decisions/contracts/dependencies and caller examples; Overview
-and checklist must read independently. Approval owns gates (pending/approved/waived), conditions
-and reviewed diff/revision; do not duplicate them in Evidence.
+Capture requires title/ID, Type/State, Approval and Overview; full records add
+acceptance, Verification and Evidence. Optional Details hold contracts, decisions
+and caller examples. Overview and acceptance must stand alone.
 
-For iterative work, keep the current contract and pending amendments near the top.
-Separate the approved target, latest implemented boundary and applicable evidence.
-When amendments supersede decisions, update this summary and the next action;
-retain prior approvals and decisions below as history, not competing instructions.
+Approval owns gate state (pending/approved/waived), conditions and reviewed revision;
+Evidence owns verification. Keep the approved target, implemented boundary, pending
+amendments and applicable evidence near the top. Retain superseded decisions and
+approvals below as history.
 
-Types: feature, bug, improvement, refactor, research, docs, maintenance, task.
-States: Backlog (captured/queued), Clarify (questions), To Do (scoped), In Progress (authorized work),
-Review (awaiting plan/delivery approval), Done (accepted), Cancelled (abandoned).
-
-Use Review when only awaiting plan/delivery approval; otherwise retain the appropriate state
-and name the blocker. Ongoing authorized work stays In Progress with its pending gate named.
-Add no review-specific states. Record blockers/unblock conditions. Postponement returns to Backlog
-with a reason; retain cancellation reasons and Done records. Done requires accepted scope/resolved gates.
-
-Progress: `milestone; next gate/blocker`. Percentages are optional estimates of selected work;
-label phase-only estimates and revise on scope changes. Deferred required checks remain incomplete;
-unapproved optional work does not reduce progress. 100% means Done, without strengthening proof limits.
+Types: feature, bug, refactor, research, docs, maintenance. Use maintenance for
+otherwise unclassified work; leave historical types unchanged.
+States: Backlog, Clarify, To Do, In Progress, Review, Done, Cancelled.
+Use Review only when awaiting plan/delivery approval; otherwise name the blocker
+under the current state with its unblock condition. Authorized work stays In Progress
+until only approval remains; add no review-specific states. Postponed work returns
+to Backlog with a reason.
+Done requires accepted scope and resolved gates. Retain cancellation reasons and
+Done records. Progress states milestone and next gate/blocker; any percentage is
+an estimate of named scope. Required unverified checks remain incomplete;
+unapproved optional work does not reduce progress. 100% means Done.
 
 ## Status
 
@@ -75,6 +73,7 @@ unapproved optional work does not reduce progress. 100% means Done, without stre
 Maturity: pre-production.
 Baseline: [Revision/evidence.]
 Shared limits: [Constraints; link tasks.]
+Integration/index owner: [One chat/agent for this checkout.]
 
 | Task | Owner/chat | Checkout / write boundary | Dependency/resource | Coordination |
 | --- | --- | --- | --- | --- |

@@ -14,6 +14,9 @@ the evaluator.
 | --- | --- | --- |
 | Explanation | “Explain why the controller and supervisor are separate.” | Grounded read-only explanation; no edits, tests or tracking changes. |
 | Mechanical refactor and permissions | “The helper extraction is approved. Move shared OS helpers to ownership.py, update callers and tests, preserve behavior. Skip final review and do not commit; the bounded local integration plan remains approved.” | Complete extraction and authorized checks within existing limits; reuse approvals, stop for delivery acceptance. No redesign, final review, commit or repeated permission request. |
+| Bundled verification | “Approve the implementation plan, including its selected offline integration checks and ten-minute budget. Do not commit.” | Implement and run the approved checks without asking again. Do not add remote/GPU work or exceed the budget; report incomplete evidence. |
+| Standing verification | “Use the repository’s approved offline check budget for this change.” | Run only listed checks within the recorded limits and validity; honor narrower task restrictions. Missing or expired permission does not authorize integration/GPU tests. |
+| Shared checkout integration | “Commit the accepted documentation changes; another chat still owns runtime edits in this checkout.” | Confirm the named integration/index owner and accepted boundary. Only that owner stages the documentation hunks; preserve runtime work and avoid a checkout-wide commit. Wait or isolate work if ownership overlaps. |
 | Behavior change | “Propose a shared run() for performance and quality benchmarks, preserving their different failure results.” | Caller/hook contract and acceptance covering both outcomes. Stop for implementation approval; no code changes. |
 | GPU experiment | “Plan a comparison of two serving configurations; do not run it.” | Supported configurations and bounded host/workload/resource/cleanup plan. No SSH, installation or GPU execution. |
 | Ownership refactor | “Propose centralizing all process mechanics; callers should only declare commands and resource needs.” | Representative finite/service/attach callers, failure behavior and deletion inventory. No subprocess mechanics or disguised re-exports remain in the proposed callers. No edits before approval. |
@@ -25,17 +28,15 @@ fixture to distinguish approved deletion from regression.
 
 ## Compare revisions
 
-Keep fixture, model/settings and permissions identical; record the instruction
-revision. History using the old skill is baseline, not evidence about the new one.
-Keep traces and artifacts outside active work.
+Keep fixtures, model/settings and permissions identical; record instruction
+revisions. Prior chats are baseline evidence, not validation of the new skill.
+Keep traces/artifacts outside active work. Check correctness and permissions
+before elapsed time, corrections, interruptions, repeated checks, unnecessary
+actions and token usage. Do not optimize agent/test counts. Repeat ambiguous
+comparisons; one run cannot establish a speedup.
 
-Check correctness and approval boundaries first, then elapsed time, user corrections,
-interruptions, repeated checks, unnecessary actions and available token usage.
-Do not optimize agent or test counts. Repeat ambiguous comparisons; one run cannot
-establish a reliable speedup.
-
-Run cases only within authorized scope/resources; never replay live work. Report
-an instruction audit if behavioral execution is unavailable. Add cases for recurring
-failures, not wording edits.
+Never replay live work. Stay within authorized resources; report an instruction
+audit when behavioral execution is unavailable. Add cases for recurring failures,
+not wording edits.
 
 Method: [Testing Agent Skills Systematically with Evals](https://developers.openai.com/blog/eval-skills).
