@@ -25,7 +25,6 @@ case "${1:-install}" in
     load_repository_url
     step "Install missing packages" install_packages
     load_repository_url
-    step "Initialize pinned dependencies" initialize_submodules
     step "Apply links" apply_links
     step "Install shell plugins" sheldon lock
     step "Apply macOS preferences" apply_macos_preferences

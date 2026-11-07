@@ -20,7 +20,6 @@ update_repository() {
     return 1
   fi
   git -C "$ROOT" pull --ff-only
-  initialize_submodules
 }
 
 if [[ $# -gt 1 ]]; then

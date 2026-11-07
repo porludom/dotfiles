@@ -35,6 +35,6 @@ Linux installs a minimal CLI set through apt-get, dnf, or pacman; other tools in
 `Brewfile` are optional there.
 
 Application settings remain managed by `sync.py`. Apply and update reuse existing
-choices without prompting. Update requires a clean Git working tree and keeps
-submodules at the revisions committed in the repository. Error links derive from
-the checkout's origin remote.
+choices without prompting. Update requires a clean Git working tree. Error links
+derive from the checkout's origin remote. Links are managed directly by
+`scripts/links.sh`.
