@@ -1,313 +1,308 @@
-// Place your key bindings in this file to override the defaults
 [
-    // Active keys bindings
-    // <Esc> exits suggestion without exiting vim insert mode
-    {
-      "key": "escape",
-      "command": "-extension.vim_escape",
-      "when": "editorTextFocus && vim.active && !inDebugRepl"
-    },
-    {
-      "key": "escape",
-      "command": "extension.vim_escape",
-      "when": "editorTextFocus && !inDebugRepl && !suggestWidgetVisible"
-    },
+  // <Esc> exits suggestion without exiting vim insert mode
+  {
+    "key": "escape",
+    "command": "-extension.vim_escape",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "escape",
+    "command": "extension.vim_escape",
+    "when": "editorTextFocus && !inDebugRepl && !suggestWidgetVisible"
+  },
 
-    // Run code on CMD+Enter
-    {
-      "key": "shift+cmd+enter",
-      "command": "workbench.action.debug.selectandstart",
-      "when": "debuggersAvailable && debugState != 'initializing'"
-    },
-    {
-      "key": "cmd+enter",
-      "command": "workbench.action.debug.start",
-      "when": "debuggersAvailable && debugState == 'inactive'"
-    },
+  // Start debugging with CMD+Enter
+  {
+    "key": "shift+cmd+enter",
+    "command": "workbench.action.debug.selectandstart",
+    "when": "debuggersAvailable && debugState != 'initializing'"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "workbench.action.debug.start",
+    "when": "debuggersAvailable && debugState == 'inactive'"
+  },
 
-    // Build latex on CMD+Enter
-    {
-      "key": "alt+cmd+b",
-      "command": "-latex-workshop.build",
-      "when": "!config.latex-workshop.bind.altKeymap.enabled && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/"
-    },
-    {
-      "key": "cmd+enter",
-      "command": "-editor.action.insertLineAfter",
-      "when": "editorTextFocus && !editorReadonly"
-    },
-    {
-      "key": "cmd+enter",
-      "command": "latex-workshop.build",
-      "when": "!config.latex-workshop.bind.altKeymap.enabled && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/"
-    },
+  // Build LaTeX with CMD+Enter
+  {
+    "key": "alt+cmd+b",
+    "command": "-latex-workshop.build",
+    "when": "!config.latex-workshop.bind.altKeymap.enabled && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-editor.action.insertLineAfter",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "latex-workshop.build",
+    "when": "!config.latex-workshop.bind.altKeymap.enabled && !virtualWorkspace && editorLangId =~ /^latex$|^latex-expl3$|^rsweave$|^jlweave$|^pweave$/"
+  },
 
-    // Use double shift to open "Go to File..."
-    {
-      "key": "shift shift",
-      "command": "workbench.action.quickOpen"
-    },
+  // Use double shift to open "Go to File..."
+  {
+    "key": "shift shift",
+    "command": "workbench.action.quickOpen"
+  },
 
-    // Switch windows using h and l as arrows
-    // Rename
-    {
-      "key": "cmd+m",
-      "command": "editor.action.rename",
-      "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-    },
+  // Rename
+  {
+    "key": "cmd+m",
+    "command": "editor.action.rename",
+    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+  },
 
-    // Alt enter showing quick fixes and accepting selected quick fix or code action
-    {
-      "key": "alt+enter",
-      "command": "-debug.openBreakpointToSide",
-      "when": "breakpointsFocused"
-    },
-    {
-      "key": "alt+enter",
-      "command": "-testing.editFocusedTest",
-      "when": "focusedView == 'workbench.view.testing'"
-    },
-    {
-      "key": "alt+enter",
-      "command": "problems.action.showQuickFixes",
-      "when": "problemFocus"
-    },
-    {
-      "key": "alt+enter",
-      "command": "editor.action.quickFix",
-      "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
-    },
-    {
-      "key": "alt+enter",
-      "command": "acceptSelectedCodeAction",
-      "when": "codeActionMenuVisible"
-    },
+  // Alt enter showing quick fixes and accepting selected quick fix or code action
+  {
+    "key": "alt+enter",
+    "command": "-debug.openBreakpointToSide",
+    "when": "breakpointsFocused"
+  },
+  {
+    "key": "alt+enter",
+    "command": "-testing.editFocusedTest",
+    "when": "focusedView == 'workbench.view.testing'"
+  },
+  {
+    "key": "alt+enter",
+    "command": "problems.action.showQuickFixes",
+    "when": "problemFocus"
+  },
+  {
+    "key": "alt+enter",
+    "command": "editor.action.quickFix",
+    "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+enter",
+    "command": "acceptSelectedCodeAction",
+    "when": "codeActionMenuVisible"
+  },
 
-    // Side bar bindings
-    {
-      "key": "cmd+b",
-      "command": "-workbench.action.toggleSidebarVisibility"
-    },
-    {
-      "key": "cmd+[IntlBackslash]",
-      // "key": "cmd+1",
-      "command": "workbench.action.toggleSidebarVisibility"
-    },
-    {
-      "key": "shift+cmd+[IntlBackslash]",
-      "command": "workbench.action.toggleActivityBarVisibility"
-    },
-    {
-      "key": "cmd+`",
-      // "key": "cmd+1",
-      "command": "workbench.action.toggleSidebarVisibility"
-    },
-    {
-      "key": "shift+cmd+`",
-      "command": "workbench.action.toggleActivityBarVisibility"
-    },
-    {
-      "key": "cmd+1",
-      "command": "workbench.view.explorer"
-    },
-    {
-      "key": "shift+cmd+1",
-      "command": "workbench.view.remote"
-    },
-    {
-      "key": "cmd+2",
-      "command": "workbench.view.scm"
-    },
+  // Side bar bindings
+  {
+    "key": "cmd+b",
+    "command": "-workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "cmd+[IntlBackslash]",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "shift+cmd+[IntlBackslash]",
+    "command": "workbench.action.toggleActivityBarVisibility"
+  },
+  {
+    "key": "cmd+`",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "shift+cmd+`",
+    "command": "workbench.action.toggleActivityBarVisibility"
+  },
+  {
+    "key": "cmd+1",
+    "command": "workbench.view.explorer"
+  },
+  {
+    "key": "shift+cmd+1",
+    "command": "workbench.view.remote"
+  },
+  {
+    "key": "cmd+2",
+    "command": "workbench.view.scm"
+  },
 
-    // Terminal window bindings
-    {
-      "key": "shift+cmd+c",
-      "command": "-workbench.action.terminal.openNativeConsole",
-      "when": "!terminalFocus"
-    },
-    {
-      "key": "cmd+[Quote]",
-      "command": "workbench.action.terminal.toggleTerminal",
-      "when": "terminal.active"
-    },
-    {
-      "key": "shift+cmd+[Quote]",
-      "command": "workbench.action.terminal.new",
-      "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
-    },
+  // Terminal window bindings
+  {
+    "key": "shift+cmd+c",
+    "command": "-workbench.action.terminal.openNativeConsole",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "cmd+[Quote]",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  {
+    "key": "shift+cmd+[Quote]",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
 
-    {
-      "key": "alt+cmd+l",
-      "command": "workbench.action.terminal.focusNextPane",
-      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-    },
-    {
-      "key": "alt+cmd+h",
-      "command": "workbench.action.terminal.focusPreviousPane",
-      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-    },
+  {
+    "key": "alt+cmd+l",
+    "command": "workbench.action.terminal.focusNextPane",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "alt+cmd+h",
+    "command": "workbench.action.terminal.focusPreviousPane",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
 
-    // Terminal bindings
-    {
-      "key": "cmd+k",
-      "command": "-workbench.action.terminal.clear",
-      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-    },
-    {
-      "key": "cmd+r",
-      "command": "workbench.action.terminal.clear",
-      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-    },
-    {
-      "key": "cmd+k",
-      "command": "workbench.action.terminal.kill",
-      "when": "terminalFocus"
-    },
+  // Terminal bindings
+  {
+    "key": "cmd+k",
+    "command": "-workbench.action.terminal.clear",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "cmd+r",
+    "command": "workbench.action.terminal.clear",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "cmd+k",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus"
+  },
 
-    {
-      "key": "alt+cmd+left",
-      "command": "workbench.action.terminal.focusPreviousPane",
-      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-    },
-    {
-      "key": "alt+cmd+right",
-      "command": "workbench.action.terminal.focusNextPane",
-      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
-    },
-    {
-      "key": "alt+cmd+up",
-      "command": "workbench.action.terminal.focusPrevious",
-      "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
-    },
-    {
-      "key": "alt+cmd+down",
-      "command": "workbench.action.terminal.focusNext",
-      "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
-    },
+  {
+    "key": "alt+cmd+left",
+    "command": "workbench.action.terminal.focusPreviousPane",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "alt+cmd+right",
+    "command": "workbench.action.terminal.focusNextPane",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "alt+cmd+up",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+  },
+  {
+    "key": "alt+cmd+down",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+  },
 
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "\u001b\r"
+    },
+    "when": "terminalFocus"
+  },
 
-    {
-        "key": "shift+enter",
-        "command": "workbench.action.terminal.sendSequence",
-        "args": {
-            "text": "\u001b\r"
-        },
-        "when": "terminalFocus"
-    },
+  // Reveal definition / reference bindings
+  {
+    "key": "f12",
+    "command": "-editor.action.revealDefinition",
+    "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+  },
+  {
+    "key": "shift+f12",
+    "command": "-editor.action.goToReferences",
+    "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
+  },
+  {
+    "key": "f12",
+    "command": "-goToNextReference",
+    "when": "inReferenceSearchEditor || referenceSearchVisible"
+  },
+  {
+    "key": "f12",
+    "command": "-editor.gotoNextSymbolFromResult",
+    "when": "hasSymbols"
+  },
+  {
+    "key": "cmd+b",
+    "command": "editor.action.revealDefinition",
+    "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+  },
+  {
+    "key": "shift+cmd+b",
+    "command": "editor.action.goToReferences",
+    "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
+  },
+  {
+    "key": "cmd+b",
+    "command": "goToNextReference",
+    "when": "inReferenceSearchEditor || referenceSearchVisible"
+  },
+  {
+    "key": "cmd+b",
+    "command": "editor.gotoNextSymbolFromResult",
+    "when": "hasSymbols"
+  },
 
-    // Reveal definition / reference bindings
-    {
-      "key": "f12",
-      "command": "-editor.action.revealDefinition",
-      "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
-    },
-    {
-      "key": "shift+f12",
-      "command": "-editor.action.goToReferences",
-      "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
-    },
-    {
-      "key": "f12",
-      "command": "-goToNextReference",
-      "when": "inReferenceSearchEditor || referenceSearchVisible"
-    },
-    {
-      "key": "f12",
-      "command": "-editor.gotoNextSymbolFromResult",
-      "when": "hasSymbols"
-    },
-    {
-      "key": "cmd+b",
-      "command": "editor.action.revealDefinition",
-      "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
-    },
-    {
-      "key": "shift+cmd+b",
-      "command": "editor.action.goToReferences",
-      "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
-    },
-    {
-      "key": "cmd+b",
-      "command": "goToNextReference",
-      "when": "inReferenceSearchEditor || referenceSearchVisible"
-    },
-    {
-      "key": "cmd+b",
-      "command": "editor.gotoNextSymbolFromResult",
-      "when": "hasSymbols"
-    },
+  /////////////////
+  // Other bindings
+  /////////////////
 
-    /////////////////
-    // Other bindings
-    /////////////////
-
-    {
-      "key": "shift+cmd+,",
-      "command": "workbench.action.openSettingsJson"
-    },
-    {
-      "key": "cmd+.",
-      "command": "editor.action.marker.nextInFiles",
-      "when": "editorFocus"
-    },
-    {
-      "key": "f8",
-      "command": "-editor.action.marker.nextInFiles",
-      "when": "editorFocus"
-    },
-    {
-      "key": "alt+right",
-      "command": "-breadcrumbs.focusNext",
-      "when": "breadcrumbsActive && breadcrumbsVisible"
-    },
-    {
-      "key": "alt+right",
-      "command": "-breadcrumbs.focusNextWithPicker",
-      "when": "breadcrumbsActive && breadcrumbsVisible && listFocus && !inputFocus"
-    },
-    {
-      "key": "alt+left",
-      "command": "-breadcrumbs.focusPrevious",
-      "when": "breadcrumbsActive && breadcrumbsVisible"
-    },
-    {
-      "key": "alt+left",
-      "command": "-breadcrumbs.focusPreviousWithPicker",
-      "when": "breadcrumbsActive && breadcrumbsVisible && listFocus && !inputFocus"
-    },
-    {
-      "key": "cmd+[",
-      "command": "-editor.action.outdentLines",
-      "when": "editorTextFocus && !editorReadonly"
-    },
-    {
-      "key": "cmd+]",
-      "command": "-editor.action.indentLines",
-      "when": "editorTextFocus && !editorReadonly"
-    },
-    {
-      "key": "cmd+.",
-      "command": "-editor.action.quickFix",
-      "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
-    },
-    {
-      "key": "cmd+.",
-      "command": "-problems.action.showQuickFixes",
-      "when": "problemFocus"
-    },
-    {
-      "key": "cmd+.",
-      "command": "-acceptSelectedCodeAction",
-      "when": "codeActionMenuVisible"
-    },
-    {
-      "key": "alt+cmd+h",
-      "command": "workbench.action.previousEditor",
-      "when": "!terminalFocus"
-    },
-    {
-      "key": "alt+cmd+l",
-      "command": "workbench.action.nextEditor",
-      "when": "!terminalFocus"
-    }
-  ]
+  {
+    "key": "shift+cmd+,",
+    "command": "vscode.open",
+    "args": "${vscodeDir}/settings.jsonc"
+  },
+  {
+    "key": "cmd+.",
+    "command": "editor.action.marker.nextInFiles",
+    "when": "editorFocus"
+  },
+  {
+    "key": "f8",
+    "command": "-editor.action.marker.nextInFiles",
+    "when": "editorFocus"
+  },
+  {
+    "key": "alt+right",
+    "command": "-breadcrumbs.focusNext",
+    "when": "breadcrumbsActive && breadcrumbsVisible"
+  },
+  {
+    "key": "alt+right",
+    "command": "-breadcrumbs.focusNextWithPicker",
+    "when": "breadcrumbsActive && breadcrumbsVisible && listFocus && !inputFocus"
+  },
+  {
+    "key": "alt+left",
+    "command": "-breadcrumbs.focusPrevious",
+    "when": "breadcrumbsActive && breadcrumbsVisible"
+  },
+  {
+    "key": "alt+left",
+    "command": "-breadcrumbs.focusPreviousWithPicker",
+    "when": "breadcrumbsActive && breadcrumbsVisible && listFocus && !inputFocus"
+  },
+  {
+    "key": "cmd+[",
+    "command": "-editor.action.outdentLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+]",
+    "command": "-editor.action.indentLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+.",
+    "command": "-editor.action.quickFix",
+    "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+.",
+    "command": "-problems.action.showQuickFixes",
+    "when": "problemFocus"
+  },
+  {
+    "key": "cmd+.",
+    "command": "-acceptSelectedCodeAction",
+    "when": "codeActionMenuVisible"
+  },
+  {
+    "key": "alt+cmd+h",
+    "command": "workbench.action.previousEditor",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "alt+cmd+l",
+    "command": "workbench.action.nextEditor",
+    "when": "!terminalFocus"
+  }
+]

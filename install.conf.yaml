@@ -56,7 +56,7 @@
     - description: Setup macos
       command: source scripts/bootstrap && setup_macos
 
-    - description: Install shared VS Code preferences with local overrides
-      command: if [ "$(uname)" = Darwin ]; then python3 vscode/install.py --enable-sync; fi
+    - description: Enable VSCode/iTerm2 settings synchronization
+      command: if [ "$(uname)" = Darwin ]; then python3 sync.py --setup; fi
 
     - source scripts/bootstrap && on_finish

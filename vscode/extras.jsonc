@@ -1,6 +1,5 @@
 {
   // Vim
-  // "vim.useSystemClipboard": true,
   "vim.easymotion": true,
   "vim.sneak": true,
   "vim.hlsearch": true,
@@ -269,6 +268,7 @@
 
   // Spelling
   "cSpell.language": "en,ru",
+  "cSpell.diagnosticLevel": "Hint",
   "cSpell.userWords": [
     "acronorm",
     "agentlen",

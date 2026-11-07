@@ -44,7 +44,6 @@
   "diffEditor.ignoreTrimWhitespace": false,
 
   // Explorer and editor tabs
-  // "workbench.editor.tabSizing": "shrink",
   "explorer.confirmDragAndDrop": false,
   "explorer.confirmDelete": false,
   "workbench.editorAssociations": {
@@ -121,19 +120,12 @@
       "source.fixAll": "explicit",
     },
   },
-  "ruff.lineLength": 100,
   "ruff.configurationPreference": "filesystemFirst",
-  "ruff.configuration": {
-    "lint": {
-      "unfixable": ["F401", "F841", "B905"],
-    },
-  },
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.gotoDefinitionInStringLiteral": true,
   "python.analysis.importFormat": "relative",
-  // "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
   "python.analysis.inlayHints.pytestParameters": true,
   "python.analysis.inlayHints.callArgumentNames": "partial",
@@ -161,7 +153,6 @@
   // Shell, containers, and Protobuf
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-containers",
-    // "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format",
@@ -192,8 +183,9 @@
   },
   // Diagnostics
   "errorLens.enabled": true,
+  "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+  "errorLens.excludeBySource": ["cSpell"],
   "todo-tree.highlights.enabled": false,
-  "errorLens.excludeByMessage": ["Unknown word."],
   // Remote and security
   "security.workspace.trust.untrustedFiles": "open",
   "security.promptForRemoteFileProtocolHandling": false,
