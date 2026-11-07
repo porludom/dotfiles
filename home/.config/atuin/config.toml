@@ -4,5 +4,6 @@ enter_accept = false
 search_mode = "fuzzy"
 filter_mode = "global"
 show_numeric_shortcuts = false
-show_help = false
+show_help = true
 show_tabs = false
+show_preview = false
