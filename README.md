@@ -15,13 +15,3 @@ cd $HOME/.dotfiles
 # Install dotfiles
 make install
 ```
-
-## Update
-
-```bash
-make update
-```
-
-## Resources
-
-This repository is inspired by [denysdovhan's dotfiles](https://github.com/denysdovhan/dotfiles)

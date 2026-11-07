@@ -9,6 +9,7 @@ home/.config/com.nvidia.devtools
 home/.config/NVIDIA Corporation
 
 # Editor ignores
+__pycache__/
 .idea
 .vscode
 .dotfiles.code-workspace

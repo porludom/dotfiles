@@ -1,0 +1,207 @@
+{
+  // Theme
+  "workbench.colorTheme": "Catppuccin Frappé",
+  "workbench.iconTheme": "material-icon-theme",
+
+  // Window and layout
+  "workbench.experimental.modernUI": false,
+  "workbench.sideBar.location": "right",
+  "window.titleBarStyle": "custom",
+  "window.title": "${activeEditorMedium}${separator}${rootName}${separator}${remoteName}",
+  "window.restoreFullscreen": true,
+  "window.commandCenter": false,
+  "workbench.layoutControl.enabled": false,
+
+  // Font
+  "editor.fontFamily": "'FiraCode Nerd Font', 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 23,
+  "editor.fontLigatures": true,
+
+  // Cursor
+  "editor.cursorStyle": "line",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+
+  // Editor guides
+  "editor.lineNumbers": "relative",
+  "editor.rulers": [100],
+  "editor.minimap.enabled": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.minimap.autohide": "mouseover",
+  "indentRainbow.indicatorStyle": "light",
+  "indentRainbow.colors": [
+    "rgba(255,255,64,0.3)",
+    "rgba(127,255,127,0.3)",
+    "rgba(255,127,255,0.3)",
+    "rgba(79,236,236,0.3)",
+  ],
+
+  // Editor behavior
+  "editor.linkedEditing": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.accessibilitySupport": "off",
+  "diffEditor.ignoreTrimWhitespace": false,
+
+  // Explorer and editor tabs
+  // "workbench.editor.tabSizing": "shrink",
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "workbench.editorAssociations": {
+    "*.wav": "wavPreview.audioPreview",
+    "*.mp3": "wavPreview.audioPreview",
+    "git-rebase-todo": "gitlens.rebase",
+  },
+
+  // Files, saving, and formatting
+  "files.exclude": {
+    ".idea": true,
+    "**/__pycache__": true,
+    "**/.ipynb_checkpoints": true,
+    "**/.mypy_cache": true,
+    "**/.ruff_cache": true,
+    "**/.pytest_cache": true,
+    "**/*.synctex.gz": true,
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/venv/**": true,
+    "**/.venv/**": true,
+  },
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "files.associations": {
+    ".env*": "dotenv",
+  },
+
+  // Terminal
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontFamily": "'FiraCode Nerd Font', 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.defaultProfile.linux": "zsh",
+
+  // Git and source control
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.inputValidationSubjectLength": 72,
+  "git.ignoreRebaseWarning": true,
+  "git.enableCommitSigning": false,
+  "git.replaceTagsWhenPull": true,
+  "git.openRepositoryInParentFolders": "never",
+  "nestor.commitMessagePrompt": "Follow Conventional Commits.\nFormat logs like \"[ACTION] short description\", where ACTIONS is ADD, UPD, DEL, REMOVE, ...",
+  "gitlens.graph.details.location": "auto",
+
+  // AI and suggestions
+  "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.showToolbar": "always",
+  "editor.inlineSuggest.edits.showCollapsed": true,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false,
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "gitlab.duoChat.enabled": false,
+  "editor.aiStats.enabled": true,
+  "chat.mcp.gallery.enabled": true,
+  "claudeCode.preferredLocation": "panel",
+  "chat.disableAIFeatures": true,
+
+  // Python and notebooks
+
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit",
+    },
+  },
+  "ruff.lineLength": 100,
+  "ruff.configurationPreference": "filesystemFirst",
+  "ruff.configuration": {
+    "lint": {
+      "unfixable": ["F401", "F841", "B905"],
+    },
+  },
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.gotoDefinitionInStringLiteral": true,
+  "python.analysis.importFormat": "relative",
+  // "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.pytestParameters": true,
+  "python.analysis.inlayHints.callArgumentNames": "partial",
+  "python.createEnvironment.trigger": "off",
+  "jupyter.askForKernelRestart": false,
+
+  // C++ and Go
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+  },
+  "C_Cpp.clang_format_fallbackStyle": "Google",
+  "C_Cpp.clang_format_sortIncludes": true,
+  "go.toolsManagement.autoUpdate": true,
+
+  // YAML and TOML
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": false,
+  },
+  "yaml.customTags": ["!reference sequence"],
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+  },
+
+  // Shell, containers, and Protobuf
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers",
+    // "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[proto3]": {
+    "editor.defaultFormatter": "DrBlury.protobuf-vsc",
+  },
+
+  // Markdown
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+  },
+  "markdownlint.config": {
+    "MD024": false,
+  },
+  "markdown.extension.toc.levels": "2..6",
+  "markdown.extension.toc.omittedFromToc": {
+    "README.md": ["## Table of Contents"],
+  },
+  // Diagnostics
+  "errorLens.enabled": true,
+  "todo-tree.highlights.enabled": false,
+  "errorLens.excludeByMessage": ["Unknown word."],
+  // Remote and security
+  "security.workspace.trust.untrustedFiles": "open",
+  "security.promptForRemoteFileProtocolHandling": false,
+  "remote.SSH.localServerDownload": "always",
+
+  // Other extensions
+  "redhat.telemetry.enabled": true,
+  "vscord.status.problems.enabled": false,
+  "vscord.status.state.text.editing": "Working on {file_name}{file_extension}",
+  "vscord.status.idle.timeout": 3600,
+}
