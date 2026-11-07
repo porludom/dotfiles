@@ -68,9 +68,11 @@ Apply sections by intent: an action request phrased as a question is still an ac
   This is standing authorization for local commits and integration, not pushing
   or deployment. Respect the checkout's integration owner and unrelated changes.
 - After integration, remove completed task worktrees and prune stale worktree
-  records. Verify their changes are in `main`; preserve uncommitted work, ignored
-  data, evidence and running previews. Keep a worktree when an active owner or
-  runtime still needs it, and report the reason.
+  records. Record the integration commit and any worktree retention reason in the
+  existing handoff or task record; add no separate tracking process. Compare
+  content and history before treating dirty worktrees as unfinished. Verify their
+  changes are in `main`; preserve uncommitted work, ignored data, evidence and
+  running previews. Keep a worktree while an active owner or runtime needs it.
 
 ## Delegation and shared work
 
