@@ -30,6 +30,10 @@ Apply sections by intent: an action request phrased as a question is still an ac
 - Comment only non-obvious rationale, constraints or pitfalls.
 - Before nontrivial implementation, assess responsibilities, reuse, alternatives
   and failure costs.
+- Before significant UI layout or navigation changes, show a representative mockup
+  with realistic content and agree on the direction before implementation. Reuse
+  an already approved design or honor an explicit waiver. Handle minor copy and
+  button fixes directly when they do not materially change layout or navigation.
 - For substantial architecture changes, show a representative caller, responsibility
   owners, concrete deletions and retained failure guarantees before implementation.
 - Put concrete shared behavior/contracts in base classes; avoid speculative
