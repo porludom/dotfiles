@@ -10,6 +10,9 @@ Apply sections by intent: an action request phrased as a question is still an ac
   work and other tasks' state and owners unless explicitly changed.
 - Challenge unnecessary proposals, including the user's; consider runtime, tokens
   and maintenance.
+- Check tool and device feasibility early; choose the cheapest experiment that
+  answers the question. Report setup friction before expanding the test setup;
+  do not add plans, records or approval gates solely for this rule.
 - Promptly report overruns/stalls: elapsed/expected time, blocker, next action and
   useful user help.
 - In operational updates, distinguish implemented, committed, prepared, deployed
