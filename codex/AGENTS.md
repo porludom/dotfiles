@@ -50,6 +50,14 @@ Apply sections by intent: an action request phrased as a question is still an ac
   isolated snapshot. Relevant changes invalidate affected evidence; unrelated
   changes do not. Report verification limits; mocks/static checks do not prove
   runtime behavior.
+- Unless instructed otherwise, finish completed code work by integrating owned
+  changes into `main` and making a local commit after required verification.
+  This is standing authorization for local commits and integration, not pushing
+  or deployment. Respect the checkout's integration owner and unrelated changes.
+- After integration, remove completed task worktrees and prune stale worktree
+  records. Verify their changes are in `main`; preserve uncommitted work, ignored
+  data, evidence and running previews. Keep a worktree when an active owner or
+  runtime still needs it, and report the reason.
 
 ## Delegation and shared work
 
