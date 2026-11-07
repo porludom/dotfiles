@@ -34,6 +34,11 @@ github = 'chriskempson/base16-shell'
 
 # Appearance plugins
 
+# Load after fzf's integration and before widgets are wrapped by other plugins.
+[plugins.fzf-tab]
+github = "Aloxaf/fzf-tab"
+apply = ["defer"]
+
 # Syntax highlighting - https://github.com/zsh-users/zsh-syntax-highlighting
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
