@@ -56,7 +56,11 @@ alias myip='ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-
 alias ports='lsof -i -P -n | grep LISTEN'
 function killport() { lsof -tiTCP:"${1:?Usage: killport <port>}" -sTCP:LISTEN | xargs kill -9 ; }
 
-# Git
+# Git review
+if command -v lazygit >/dev/null 2>&1; then
+  alias lg='lazygit'
+fi
+
 function gud {
   branch=$(git branch --show-current)
   main_branch=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')

@@ -22,6 +22,7 @@ brew "git"                       # https://git-scm.com
 brew "git-lfs"                   # https://git-lfs.com
 brew "htop"                      # https://htop.dev
 brew "iproute2mac"               # https://github.com/brona/iproute2mac
+brew "lazygit"                   # https://github.com/jesseduffield/lazygit
 brew "mas"                       # https://github.com/mas-cli/mas
 brew "neovim"                    # https://neovim.io
 brew "openconnect"               # https://infradead.org/openconnect

@@ -52,11 +52,6 @@ github = "zsh-users/zsh-autosuggestions"
 use = ["{{ name }}.zsh"]
 apply = ["defer"]
 
-# Interactive git - https://github.com/wfxr/forgit
-[plugins.forgit]
-github = "wfxr/forgit"
-apply = ["defer"]
-
 # Open repo in browser - https://github.com/paulirish/git-open
 [plugins.git-open]
 github = "paulirish/git-open"

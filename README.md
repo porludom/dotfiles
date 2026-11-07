@@ -38,3 +38,18 @@ Application settings remain managed by `sync.py`. Apply and update reuse existin
 choices without prompting. Update requires a clean Git working tree. Error links
 derive from the checkout's origin remote. Links are managed directly by
 `scripts/links.sh`.
+
+## Terminal workflow
+
+Use `lg` to review changes, stage hunks, manage branches, and resolve conflicts in
+Lazygit. It replaces forgit; ordinary Git aliases, `git-open`, and `gud` remain
+available.
+
+Python environments switch automatically when entering a project with an existing
+`.venv`, including its subdirectories. Leaving deactivates the environment. Run
+`uv sync` explicitly to create or update dependencies; directory changes do not
+install them. No `.envrc` is needed for activation. Each worktree uses its own
+`.venv`. Direnv remains available for approved project-specific variables; avoid
+also activating Python environments there.
+
+Open a new shell after updating; existing shells retain previously loaded plugins.

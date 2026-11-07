@@ -120,7 +120,7 @@ if [ -f ~/.zshrc.private.zsh ]; then
   source ~/.zshrc.private.zsh
 fi
 
-# Load project overrides after machine defaults; virtualenvs use autoswitch.
+# Load approved project variables after machine defaults.
 if _exists direnv; then
   eval "$(direnv hook zsh)"
 fi
