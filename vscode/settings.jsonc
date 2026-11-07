@@ -86,6 +86,7 @@
 
   // Git and source control
   "git.autofetch": true,
+  "git.detectWorktrees": true,
   "git.confirmSync": false,
   "git.inputValidationSubjectLength": 72,
   "git.ignoreRebaseWarning": true,
