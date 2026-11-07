@@ -25,7 +25,7 @@ findings, not copied approvals. Status/backlog link tasks rather than copying th
 # PROJ-017: Outcome
 
 Type: bug. State: Clarify.
-Approval: implementation=authorized; plan=not-required; delivery=not-required; commit=pending.
+Approval: implementation=authorized; plan=not-required; delivery=not-required; commit=authorized (global policy).
 Progress: Input selection unresolved; next: clarify requirements.
 
 ## Overview
