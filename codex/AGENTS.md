@@ -69,6 +69,11 @@ Apply sections by intent: an action request phrased as a question is still an ac
   changes into `main` and making a local commit after required verification.
   This is standing authorization for local commits and integration, not pushing
   or deployment. Respect the checkout's integration owner and unrelated changes.
+- Keep `main` history linear: rebase/fast-forward or squash task work instead of
+  creating merge commits. Use descriptive commits for coherent implementation
+  steps; fold related fixups, wording iterations and verification-only notes into
+  their owning change before integration. Keep unrelated tasks separate; rewriting
+  existing `main` or another owner's commits requires explicit authorization.
 - Finish integration by removing completed task worktrees and deleting their local
   task branches, then prune stale worktree records. Verify their work is in `main`
   using content and history before deletion; dirty status alone does not mean
