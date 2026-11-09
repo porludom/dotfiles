@@ -1,0 +1,179 @@
+{
+  "Theme": "Lovelace",
+  "Profile": {
+    "Normal Font": "FiraCodeNFM-Reg 12",
+    "Non Ascii Font": "Monaco 12",
+    "Use Non-ASCII Font": false,
+    "Scrollback Lines": 100000,
+    "Unlimited Scrollback": false,
+    "Option Key Sends": 2,
+    "Right Option Key Sends": 0,
+    "Use Tab Color": false,
+    "Keyboard Map": {
+      "0xf728-0x80000": {
+        "Action": 10,
+        "Text": "d"
+      },
+      "0xf702-0x280000": {
+        "Action": 10,
+        "Text": "b"
+      },
+      "0xf702-0x300000": {
+        "Action": 11,
+        "Text": "0x1"
+      },
+      "0xf703-0x280000": {
+        "Action": 10,
+        "Text": "f"
+      },
+      "0xf703-0x300000": {
+        "Action": 11,
+        "Text": "0x5"
+      },
+      "0x7f-0x100000": {
+        "Action": 11,
+        "Text": "0x15"
+      },
+      "0xf728-0x0": {
+        "Action": 11,
+        "Text": "0x4"
+      },
+      "0x7f-0x80000": {
+        "Action": 11,
+        "Text": "0x1b 0x7f"
+      }
+    },
+    "Use Bright Bold": true,
+    "Blinking Cursor": true,
+    "Cursor Type": 1,
+    "Visual Bell": true,
+    "Silence Bell": false,
+    "Ambiguous Double Width": false,
+    "ASCII Ligatures": false,
+    "Blend": 0.5033941947565543,
+    "Vertical Spacing": 1.0,
+    "Disable Window Resizing": true,
+    "Close Sessions On End": true,
+    "Timestamps Visible": false,
+    "Flashing Bell": false,
+    "Show Status Bar": false,
+    "Use Italic Font": true,
+    "Non-ASCII Anti Aliased": true,
+    "Transparency": 0.049079241071428574,
+    "Horizontal Spacing": 1.0,
+    "Progress Bar Height": 2,
+    "Character Encoding": 4,
+    "Show Mark Indicators": false,
+    "ASCII Anti Aliased": true,
+    "Enable Progress Bars": true,
+    "Mouse Reporting": true,
+    "Use Bold Font": true,
+    "Terminal Type": "xterm-256color",
+    "Blur": false
+  },
+  "Hotkey": {
+    "Has Hotkey": true,
+    "HotKey Modifier Flags": 1966080,
+    "HotKey Modifier Activation": 0,
+    "HotKey Window Dock Click Action": 0,
+    "HotKey Window Reopens On Activation": false,
+    "HotKey Activated By Modifier": false,
+    "HotKey Window Floats": true,
+    "HotKey Key Code": 17,
+    "HotKey Alternate Shortcuts": [],
+    "HotKey Window Animates": true,
+    "HotKey Window AutoHides": true,
+    "HotKey Characters Ignoring Modifiers": "T",
+    "HotKey Characters": "\u0014",
+    "Window Type": 2,
+    "Keyboard Map": {
+      "0x74-0x100000": {
+        "Version": 2,
+        "Apply Mode": 0,
+        "Action": 27,
+        "Text": "$PROFILE_GUID",
+        "Escaping": 2
+      }
+    }
+  },
+  "Global": {
+    "OnlyWhenMoreTabs": true,
+    "ShowFullScreenTabBar": false,
+    "TabViewType": 0,
+    "TabStyleWithAutomaticOption": 5,
+    "SplitPaneDimmingAmount": 0.14532641006097563,
+    "PromptOnQuit": false,
+    "PreventEscapeSequenceFromClearingHistory": false,
+    "HapticFeedbackForEsc": false,
+    "SoundForEsc": false,
+    "VisualIndicatorForEsc": false,
+    "GlobalKeyMap": {
+      "0x9-0x40000": {
+        "Text": "",
+        "Action": 32
+      },
+      "0xf72b-0x100000": {
+        "Text": "",
+        "Action": 4
+      },
+      "0xf72d-0x20000": {
+        "Text": "",
+        "Action": 8
+      },
+      "0xf703-0x300000": {
+        "Text": "",
+        "Action": 0
+      },
+      "0xf701-0x300000": {
+        "Text": "",
+        "Action": 6
+      },
+      "0xf72d-0x100000": {
+        "Text": "",
+        "Action": 8
+      },
+      "0x19-0x60000": {
+        "Text": "",
+        "Action": 39
+      },
+      "0xf702-0x300000": {
+        "Text": "",
+        "Action": 2
+      },
+      "0xf700-0x300000": {
+        "Text": "",
+        "Action": 7
+      },
+      "0xf703-0x320000": {
+        "Text": "",
+        "Action": 34
+      },
+      "0xf72c-0x100000": {
+        "Text": "",
+        "Action": 9
+      },
+      "0xf729-0x100000": {
+        "Text": "",
+        "Action": 5
+      },
+      "0xf72c-0x20000": {
+        "Text": "",
+        "Action": 9
+      },
+      "0xf702-0x320000": {
+        "Text": "",
+        "Action": 33
+      }
+    }
+  },
+  "Remote": {
+    "Name": "Remote",
+    "Guid": "A173508D-8C78-4BCA-A366-9DF53229F0AF",
+    "Bound Hosts": [
+      "&ssh*",
+      "&/usr/bin/ssh*"
+    ],
+    "Use Tab Color": false,
+    "Has Hotkey": false
+  }
+}
