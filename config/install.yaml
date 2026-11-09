@@ -69,13 +69,11 @@ setup-macos:
 
 setup-development:
   title: Development
-  description: Python, uv, Neovim, tmux and Docker
+  description: Neovim, tmux, direnv and Docker
   brew:
     - direnv                      # https://direnv.net
     - neovim                      # https://neovim.io
-    - python@3.12                 # https://python.org
     - tmux                        # https://github.com/tmux/tmux/wiki
-    - uv                          # https://docs.astral.sh/uv
   cask:
     - docker-desktop              # https://docker.com
 
@@ -85,13 +83,38 @@ setup-codex:
   cask:
     - codex                       # https://openai.com/codex
   link:
-    - source: codex/AGENTS.md
+    - source: config/codex/AGENTS.md
       destination: .codex/AGENTS.md
-    - source: codex/keybindings.json
+    - source: config/codex/keybindings.json
       destination: .codex/keybindings.json
-    - source: codex/config.toml
-      destination: .codex/config.toml
-      mode: seed
+  extras:
+    - codex
+  settings:
+    shared: config/codex/config.toml
+    destination: ~/.codex/config.toml
+    backups: ~/.local/state/dotfiles/codex/backups
+    baseline: ~/.local/state/dotfiles/codex/baseline.toml
+    # Each list is a TOML key path; * matches one key component.
+    local_only:
+      - [projects]
+      - [marketplaces]
+      - [notify]
+      - [model_catalog_json]
+      - [model_instructions_file]
+      - [cli_auth_credentials_store]
+      - [mcp_servers, '*', command]
+      - [mcp_servers, '*', args]
+      - [mcp_servers, '*', cwd]
+      - [mcp_servers, '*', env]
+      - [mcp_servers, '*', http_headers]
+      - [mcp_servers, '*', bearer_token]
+      - [model_providers, '*', http_headers]
+      - [model_providers, '*', experimental_bearer_token]
+      - [desktop, worktree-repository-preferences]
+      - [desktop, custom_file_handlers]
+      - [desktop, migratedFollowUpQueueToSteer]
+      - [tui, screen_reader_detection_done]
+      - [tui, model_availability_nux]
 
 setup-desktop:
   title: Desktop apps
@@ -137,12 +160,12 @@ setup-vscode:
   brew:
     - duti                        # https://github.com/moretension/duti
   settings:
-    shared: vscode
+    shared: config/vscode
     private: ~/.dotfiles_secret/vscode/settings.local.jsonc
     user: ~/Library/Application Support/Code/User
     extensions: ~/.vscode/extensions/extensions.json
     baseline: vscode/extensions.json
-    backups: .install/backups/vscode
+    backups: .private/backups/vscode
     cli: /Applications/Visual Studio Code.app/Contents/Resources/app/bin/code
     extension_timeout_seconds: 600
     layout_keys:
@@ -179,9 +202,9 @@ setup-iterm:
   settings:
     domain: com.googlecode.iterm2
     process: iTerm2
-    shared: iterm2
+    shared: config/iterm2
     destination: ~/Library/Application Support/iTerm2/DynamicProfiles/dotfiles.json
-    backups: .install/backups/iterm2
+    backups: .private/backups/iterm2
     theme_cache: iterm2/themes
     theme_library: https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/b84cd1e68c9033d967fccd9febbac3072d127b7b/schemes/
     theme_timeout_seconds: 15

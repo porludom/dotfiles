@@ -86,8 +86,6 @@ teabyii.ayu
 techer.open-in-browser
 thesofakillers.vscode-pbtxt
 tim-koehler.helm-intellisense
-tinkoff.nestor
-tinkoff.vs-code-statist-metrics
 twxs.cmake
 unthrottled.doki-theme
 usernamehw.errorlens

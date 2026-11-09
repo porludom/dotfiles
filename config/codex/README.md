@@ -1,9 +1,21 @@
 # Codex
 
-Setup copies `config.toml` to `~/.codex/config.toml` only when missing.
-The local file owns effective settings, machine paths, project trust and app state.
-Tracked defaults are a starting template; later changes must be applied explicitly
-on each Mac. Setup preserves existing config and needs no `/etc/codex` link.
+`config.toml` synchronizes both ways with `~/.codex/config.toml` through the existing
+installer sync agent. New keys are shared unless excluded by `local_only` key paths
+in `config/install.yaml`. Exclusions also apply to nested fields; arrays sync as units.
+The exclusion list is not a privacy guarantee: newly introduced machine-specific or
+secret fields must be excluded before sync. Review repository diffs before committing.
+
+On first sync, local values win overlaps and shared-only settings are imported.
+A local baseline then distinguishes changes and deletions on either side. Conflicting
+edits to the same setting stop the sync without changing either file; make the values
+agree to resolve them. Removing a key on one side removes it on the other. Excluded
+fields remain local and are removed from the shared file. No automatic Git operations.
+
+Baseline and backups live under `~/.local/state/dotfiles/codex/`, outside Git.
+Avoid editing settings during sync: input changes are checked before writing, but
+Codex does not participate in the installer lock. Writes are atomic per file, not
+across files; the baseline is written last so an interrupted sync can be rerun.
 Restart Codex after changing startup settings.
 
 Portable guidance is linked as `~/.codex/AGENTS.md`. Start a fresh chat after

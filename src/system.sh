@@ -11,17 +11,22 @@ homebrew() (
   fi
 )
 
+python_setup() (
+  if ! command -v uv >/dev/null; then
+    homebrew
+    brew install uv
+  fi
+  version=$(cat .python-version)
+  uv python install "$version" --default
+  uv python pin --global "$version"
+  uv pip install --python "$HOME/.local/bin/python3" --break-system-packages --group installer --group global
+)
+
 fork() (
   if ! command -v gh >/dev/null; then
-    echo 'Skipping fork setup: install the CLI tools stage for GitHub CLI.'
-    exit 0
+    echo 'Install GitHub CLI (gh) before creating a fork.' >&2
+    exit 1
   fi
-  if [[ $# -gt 0 ]]; then
-    answer=$1
-  else
-    read -r -p 'Create a GitHub fork and use it as origin? [y/N]: ' answer
-  fi
-  [[ "$answer" == [yY] || "$answer" == [yY][eE][sS] ]] || exit 0
   gh auth status >/dev/null 2>&1 || gh auth login
 
   repo=$(gh repo view --json name --jq .name)
@@ -49,33 +54,15 @@ packages() (
       ;;
   esac
   manifest=$1
-  shift
-  [[ $# -gt 0 ]] || exit 0
   homebrew
   export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
   export MAS_NO_AUTO_INDEX=1
-  mas_ids=()
+  upgrade=--no-upgrade
   if [[ "$action" == update ]]; then
     brew update
-    while [[ $# -gt 0 ]]; do
-      kind=$1
-      name=$2
-      shift 2
-      if [[ "$kind" == mas ]]; then
-        mas_ids+=("$name")
-        continue
-      fi
-      flag=--formula
-      [[ "$kind" != cask ]] || flag=--cask
-      if brew list "$flag" "$name" >/dev/null 2>&1; then
-        brew upgrade "$flag" "$name"
-      fi
-    done
+    upgrade=--upgrade
   fi
-  brew bundle install --no-upgrade "--file=$manifest"
-  if [[ ${#mas_ids[@]} -gt 0 ]]; then
-    mas upgrade "${mas_ids[@]}"
-  fi
+  brew bundle install "$upgrade" "--file=$manifest"
 )
 
 touch_id() (
@@ -104,6 +91,10 @@ update() (
 )
 
 case "${1:-}" in
+  --python)
+    python_setup
+    exit
+    ;;
   --fork)
     shift
     fork "$@"

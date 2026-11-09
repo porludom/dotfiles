@@ -29,12 +29,12 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 
-_extend_path "$HOME/.local/bin"
 if [ "$(uname)" = "Darwin" ]; then
   _extend_path "/opt/homebrew/sbin"
   _extend_path "/opt/homebrew/bin"
   _extend_path "$HOME/go/bin"
 fi
+_extend_path "$HOME/.local/bin"
 
 HISTSIZE=100000
 SAVEHIST=50000

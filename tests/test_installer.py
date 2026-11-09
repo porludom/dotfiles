@@ -17,7 +17,7 @@ from src import config as model
 from src import install as installer
 
 SOURCE = Path(__file__).resolve().parents[1]
-main, prompt = installer.main, installer.prompt
+main = installer.main
 vscode, iterm = apps.VSCode(), apps.ITerm()
 configuration = repository = installer
 preferences = apps
@@ -29,12 +29,13 @@ class InstallerTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / "repo with spaces"
         self.root.mkdir(parents=True)
-        shutil.copy2(SOURCE / "install.yaml", self.root / "install.yaml")
+        (self.root / "config").mkdir()
+        shutil.copy2(SOURCE / "config/install.yaml", self.root / "config/install.yaml")
         shutil.copytree(SOURCE / "home", self.root / "home")
         shutil.copytree(
             SOURCE / "src", self.root / "src", ignore=shutil.ignore_patterns("__pycache__")
         )
-        self.catalog = model.load_catalog(self.root / "install.yaml")
+        self.catalog = model.load_catalog(self.root)
         for bundle in self.catalog:
             for config in bundle.configuration:
                 source = self.root / config.source
@@ -56,7 +57,7 @@ class InstallerTests(unittest.TestCase):
         home_patch = patch.object(configuration.Path, "home", return_value=self.local_home)
         home_patch.start()
         self.addCleanup(home_patch.stop)
-        self.choices = {b.id: "k" for b in self.catalog}
+        self.selected = set()
         fork = patch("src.install.run_shell")
         fork.start()
         self.addCleanup(fork.stop)
@@ -64,8 +65,22 @@ class InstallerTests(unittest.TestCase):
     def git(self, *args):
         return subprocess.check_output(["git", "-C", str(self.root), *args], text=True)
 
-    def plan(self):
-        return model.resolve(self.catalog, self.choices)
+    def stages(self):
+        return tuple(stage for stage in self.catalog if stage.id in self.selected)
+
+    def configure(self):
+        path = self.root / "config/install.yaml"
+        document = yaml.safe_load(path.read_text())
+        path.write_text(
+            yaml.safe_dump(
+                {
+                    key: value
+                    for key, value in document.items()
+                    if key == "settings" or key in self.selected
+                },
+                sort_keys=False,
+            )
+        )
 
     def test_setup_groups_match_the_requested_order(self):
         self.assertEqual(
@@ -80,35 +95,32 @@ class InstallerTests(unittest.TestCase):
                 "setup-iterm",
             ],
         )
-        document = yaml.safe_load((self.root / "install.yaml").read_text())
+        document = yaml.safe_load((self.root / "config/install.yaml").read_text())
         for name in ("macos", "vscode", "iterm"):
             self.assertIn("settings", document["setup-" + name])
             self.assertNotIn(name, document["settings"])
 
-    def test_stage_prompts_and_invalid_retry(self):
-        with patch("builtins.input", side_effect=["invalid", *([""] * len(self.catalog))]) as ask:
-            self.assertEqual(prompt(self.catalog), self.choices)
-        self.assertEqual(ask.call_count, len(self.catalog) + 1)
-
     def test_selection_and_shared_dependency_are_resolved_once(self):
-        self.choices["setup-desktop"] = "i"
-        plan = self.plan()
-        names = [p.name for p in plan.packages]
+        self.selected.add("setup-desktop")
+        plan = self.stages()
+        names = [p.name for p in model.collect_packages(plan)]
         self.assertEqual(names.count("mas"), 1)
         self.assertNotIn("visual-studio-code", names)
         self.assertNotIn("tldr", names)
 
     def test_catalog_rejects_overlapping_ownership(self):
-        path = self.root / "install.yaml"
+        path = self.root / "config/install.yaml"
         settings = yaml.safe_load(path.read_text())
-        settings["setup-vscode"]["link"] = [{"source": "iterm2", "adapter": "iterm"}]
+        settings["setup-vscode"]["link"] = [{"source": "config/iterm2", "adapter": "iterm"}]
         path.write_text(yaml.safe_dump(settings))
         with self.assertRaisesRegex(ValueError, "overlapping owners"):
-            model.load_catalog(self.root / "install.yaml")
+            model.load_catalog(self.root)
 
     def test_cli_installs_github_cli_alongside_git(self):
-        self.choices["setup-terminal"] = "i"
-        self.assertTrue({"gh", "git", "git-lfs"} <= {p.name for p in self.plan().packages})
+        self.selected.add("setup-terminal")
+        self.assertTrue(
+            {"gh", "git", "git-lfs"} <= {p.name for p in model.collect_packages(self.stages())}
+        )
 
     def test_macos_commands_and_vscode_associations_have_separate_settings(self):
         settings = model.load("macos")
@@ -136,7 +148,7 @@ class InstallerTests(unittest.TestCase):
         )
 
     def test_vscode_associations_do_not_require_the_macos_stage(self):
-        self.choices["setup-vscode"] = "i"
+        self.selected.add("setup-vscode")
         self.shell_command("duti", 'echo "$*" >> "$COMMAND_LOG"\n')
         log = Path(self.temp.name) / "associations.log"
         with (
@@ -151,26 +163,26 @@ class InstallerTests(unittest.TestCase):
                 },
             ),
         ):
-            configuration.apply(self.root, self.plan(), command="install")
+            configuration.apply(self.root, self.stages(), command="install")
         self.assertEqual(len(log.read_text().splitlines()), 6)
 
     def test_unknown_stage_actions_are_rejected(self):
-        path = self.root / "install.yaml"
+        path = self.root / "config/install.yaml"
         path.write_text("setup-test: {title: Test, description: Test, mystery: true}\n")
         with self.assertRaisesRegex(ValueError, "Unknown actions"):
-            model.load_catalog(path)
+            model.load_catalog(self.root)
 
     def test_scalar_package_action_is_rejected_before_installation(self):
-        path = self.root / "install.yaml"
+        path = self.root / "config/install.yaml"
         data = yaml.safe_load(path.read_text())
         data["setup-terminal"]["brew"] = "git"
         path.write_text(yaml.safe_dump(data))
         with self.assertRaisesRegex(ValueError, "setup-terminal.brew"):
-            model.load_catalog(path)
+            model.load_catalog(self.root)
 
-    def test_home_links_automatically_even_when_optional_bundles_are_kept(self):
+    def test_home_links_even_with_no_app_stages(self):
         with patch.object(apps, "sync_apps") as sync:
-            configuration.apply(self.root, self.plan())
+            configuration.apply(self.root, self.stages())
         target = self.local_home / ".config/starship.toml"
         self.assertTrue(target.is_symlink())
         self.assertFalse(target.parent.is_symlink())
@@ -183,7 +195,7 @@ class InstallerTests(unittest.TestCase):
     def test_missing_home_source_stops_before_linking(self):
         shutil.rmtree(self.root / "home")
         with self.assertRaisesRegex(RuntimeError, "Restore the repository home/"):
-            configuration.check_sources(self.root, self.plan())
+            configuration.check_sources(self.root, self.stages())
         self.assertEqual(list(self.local_home.iterdir()), [])
 
     def test_home_directory_link_migration_preserves_existing_files(self):
@@ -197,98 +209,106 @@ class InstallerTests(unittest.TestCase):
         configuration.link_home(self.root / "home", self.local_home)
         self.assertEqual(len(list(self.local_home.glob("dotfiles-backup-*"))), 1)
 
-    def test_delete_removes_local_sources_without_touching_index(self):
-        self.choices["setup-vscode"] = "d"
-        (self.root / "vscode/settings.json").write_text("local edit")
-        (self.root / "vscode/private").write_text("local data")
-        repository.prune_local(self.root, self.plan())
-        self.assertFalse((self.root / "vscode").exists())
-        self.assertEqual(self.git("diff", "--cached", "--name-only"), "")
-        repository.prune_local(self.root, self.plan())
-
-    def test_existing_parent_symlink_neither_moves_nor_prunes_source(self):
-        home = Path(self.temp.name) / "home"
-        home.mkdir()
-        (home / ".config").symlink_to(self.root / "home/.config", target_is_directory=True)
-        source = self.root / "home/.config/starship.toml"
-        with patch.object(configuration.Path, "home", return_value=home):
-            configuration.link(source, home / ".config/starship.toml")
-            self.choices["setup-terminal"] = "d"
-            repository.prune_local(self.root, self.plan())
-        self.assertTrue(source.is_file())
-        self.assertFalse(source.is_symlink())
-
     def test_install_leaves_existing_index_untouched(self):
         (self.root / "home/.zshrc").write_text("existing edit")
         self.git("add", "home/.zshrc")
         before = self.git("diff", "--cached")
+        self.configure()
         with (
             patch("src.install.sys.platform", "darwin"),
-            patch("builtins.input", side_effect=[*(["k"] * len(self.catalog)), "n"]),
+            patch("builtins.input", side_effect=AssertionError("Unexpected prompt")),
         ):
             main(["install"], self.root)
         self.assertEqual(self.git("diff", "--cached"), before)
 
-    def test_real_entrypoint_keeps_stdin_for_stage_prompts(self):
-        shutil.copy2(SOURCE / "install", self.root / "install")
+    def test_real_entrypoint_uses_edited_config_without_input(self):
+        self.configure()
+        for name in ("install", ".python-version", "pyproject.toml"):
+            shutil.copy2(SOURCE / name, self.root / name)
         self.shell_command("xcode-select", "exit 0\n")
+        self.shell_command(
+            "uv",
+            'case "$1 $2" in\n'
+            '  "python install") mkdir -p "$HOME/.local/bin"; '
+            'printf \'#!/bin/bash\\nexec "$INSTALLER_TEST_PYTHON" "$@"\\n\' '
+            '> "$HOME/.local/bin/python3"; chmod +x "$HOME/.local/bin/python3" ;;\n'
+            '  "pip install") [[ "$*" == *"--python $HOME/.local/bin/python3"* ]]; '
+            '[[ "$*" == *"--group installer --group global"* ]] ;;\n'
+            "esac\n",
+        )
         result = subprocess.run(
             ["bash", str(self.root / "install")],
-            input="\n" * len(self.catalog) + "n\n",
+            input="",
             text=True,
             capture_output=True,
             env={
                 **os.environ,
                 "HOME": str(self.local_home),
+                "INSTALLER_TEST_PYTHON": sys.executable,
                 "PATH": str(Path(self.temp.name) / "commands") + os.pathsep + os.environ["PATH"],
             },
             check=False,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        choices = json.loads((self.root / ".install/choices.local.json").read_text())
-        self.assertEqual(choices, self.choices)
+        self.assertFalse((self.root / ".install/choices.local.json").exists())
         self.assertTrue((self.local_home / ".zshrc").is_symlink())
 
-    def test_regrouped_saved_choices_require_explicit_review(self):
-        previous = {
-            "shell": "i",
-            "cli": "k",
-            "development": "k",
-            "vscode": "k",
-            "iterm": "k",
-            "ai": "k",
-            "desktop": "k",
-            "macos": "k",
+    def test_launcher_help_and_maintenance_do_not_bootstrap(self):
+        shutil.copy2(SOURCE / "install", self.root / "install")
+        for name in ("uv", "brew", "xcode-select"):
+            self.shell_command(name, "echo unexpected-setup >&2; exit 91\n")
+        env = {
+            **os.environ,
+            "HOME": str(self.local_home),
+            "PATH": str(Path(self.temp.name) / "commands") + os.pathsep + os.environ["PATH"],
         }
-        with self.assertRaisesRegex(ValueError, "--choose"):
-            model.resolve(self.catalog, previous)
+        for args in (["--help"], ["install", "--help"], ["link", "--help"]):
+            with self.subTest(args=args):
+                result = subprocess.run(
+                    ["bash", str(self.root / "install"), *args],
+                    check=False,
+                    env=env,
+                    text=True,
+                    capture_output=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("Usage:", result.stdout)
+        for command in ("apply", "sync", "cleanup", "link", "fork"):
+            with self.subTest(command=command):
+                result = subprocess.run(
+                    ["bash", str(self.root / "install"), command],
+                    check=False,
+                    env=env,
+                    text=True,
+                    capture_output=True,
+                )
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertIn("Run ./install first", result.stderr)
+                self.assertNotIn("unexpected-setup", result.stderr)
 
-    def test_repeat_install_reuses_choices_without_reprompting(self):
-        with (
-            patch("src.install.sys.platform", "darwin"),
-            patch("builtins.input", side_effect=[*(["k"] * len(self.catalog)), "n"]),
-            patch("src.install.run_shell") as install,
-        ):
-            main(["install"], self.root)
-            install.assert_called_once_with("fork", "n", cwd=self.root)
-        state = self.root / ".install/choices.local.json"
-        self.assertEqual(json.loads(state.read_text()), self.choices)
-        self.git("reset", "-q")
-        with (
-            patch("src.install.sys.platform", "darwin"),
-            patch("builtins.input") as ask,
-            patch("src.install.run_shell"),
-        ):
-            main(["install"], self.root)
-            ask.assert_not_called()
+        self.configure()
+        python = self.local_home / ".local/bin/python3"
+        python.parent.mkdir(parents=True)
+        python.write_text('#!/bin/bash\nexec "$INSTALLER_TEST_PYTHON" "$@"\n')
+        python.chmod(0o755)
+        env["INSTALLER_TEST_PYTHON"] = sys.executable
+        for args in (["apply"], ["link", str(self.root / "home")]):
+            with self.subTest(args=args):
+                result = subprocess.run(
+                    ["bash", str(self.root / "install"), *args],
+                    check=False,
+                    env=env,
+                    text=True,
+                    capture_output=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertTrue((self.local_home / ".zshrc").is_symlink())
 
-    def test_failed_install_can_retry_saved_choices_without_staging(self):
+    def test_failed_install_can_rerun_the_config_without_staging(self):
+        self.selected.add("setup-desktop")
+        self.configure()
         with (
             patch("src.install.sys.platform", "darwin"),
-            patch(
-                "builtins.input",
-                side_effect=["i" if key == "setup-desktop" else "k" for key in self.choices],
-            ),
             patch("src.install.run_shell", side_effect=RuntimeError("package failed")),
             self.assertRaisesRegex(RuntimeError, "package failed"),
         ):
@@ -302,7 +322,7 @@ class InstallerTests(unittest.TestCase):
             main(["install"], self.root)
             ask.assert_not_called()
 
-    def run_fork(self, answer="y\n", fail=False):
+    def run_fork(self, fail=False):
         commands = Path(self.temp.name) / "commands"
         commands.mkdir(exist_ok=True)
         gh = commands / "gh"
@@ -319,7 +339,7 @@ class InstallerTests(unittest.TestCase):
         return subprocess.run(
             ["bash", str(SOURCE / "src/system.sh"), "--fork"],
             cwd=self.root,
-            input=answer,
+            input="",
             text=True,
             capture_output=True,
             env={
@@ -331,13 +351,9 @@ class InstallerTests(unittest.TestCase):
             check=False,
         )
 
-    def test_fork_requires_consent_and_updates_remotes_only_after_creation(self):
+    def test_explicit_fork_updates_origin_after_creation(self):
         origin = "https://github.com/source/dotfiles.git"
         self.git("remote", "add", "origin", origin)
-        result = self.run_fork("n\n")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(self.git("remote").strip(), "origin")
-        self.assertFalse((Path(self.temp.name) / "fork.log").exists())
         result = self.run_fork()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.git("remote").strip(), "origin")
@@ -385,43 +401,21 @@ class InstallerTests(unittest.TestCase):
             check=False,
         )
 
-    def test_package_update_is_limited_to_selection_and_dependencies(self):
-        self.shell_command(
-            "mas", '[[ "$MAS_NO_AUTO_INDEX" == 1 ]]\necho "mas $*" >> "$COMMAND_LOG"\n'
-        )
+    def test_package_install_and_update_use_only_the_selected_manifest(self):
         self.shell_command(
             "brew",
-            '[[ "$MAS_NO_AUTO_INDEX" == 1 ]]\necho "$*" >> "$COMMAND_LOG"\n'
-            '[[ "$*" != "list --formula missing" ]]\n',
+            '[[ "$MAS_NO_AUTO_INDEX" == 1 ]]\necho "$*" >> "$COMMAND_LOG"\n',
         )
-        result = self.run_shell(
-            "packages.sh",
-            "update",
-            "selected.Brewfile",
-            "brew",
-            "git",
-            "cask",
-            "visual-studio-code",
-            "brew",
-            "missing",
-            "mas",
-            "409183694",
-        )
-        self.assertEqual(result.returncode, 0, result.stderr)
-        commands = (Path(self.temp.name) / "commands.log").read_text().splitlines()
-        self.assertEqual(
-            commands,
-            [
-                "update",
-                "list --formula git",
-                "upgrade --formula git",
-                "list --cask visual-studio-code",
-                "upgrade --cask visual-studio-code",
-                "list --formula missing",
-                "bundle install --no-upgrade --file=selected.Brewfile",
-                "mas upgrade 409183694",
-            ],
-        )
+        for action, expected in (
+            ("install", ["bundle install --no-upgrade --file=selected.Brewfile"]),
+            ("update", ["update", "bundle install --upgrade --file=selected.Brewfile"]),
+        ):
+            with self.subTest(action=action):
+                result = self.run_shell("packages.sh", action, "selected.Brewfile")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                log = Path(self.temp.name) / "commands.log"
+                self.assertEqual(log.read_text().splitlines(), expected)
+                log.unlink()
 
     def test_touch_id_preserves_enabled_entry_and_rejects_invalid_template(self):
         self.shell_command(
@@ -457,7 +451,7 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(self.git("remote").strip(), "origin")
         self.assertEqual(self.git("remote", "get-url", "origin").strip(), origin)
 
-    def test_fork_leaves_existing_upstream_untouched_and_declines_eof(self):
+    def test_fork_leaves_existing_upstream_untouched(self):
         origin = "https://github.com/source/dotfiles.git"
         self.git("remote", "add", "origin", origin)
         self.git("remote", "add", "upstream", "https://github.com/other/dotfiles.git")
@@ -467,10 +461,6 @@ class InstallerTests(unittest.TestCase):
             self.git("remote", "get-url", "upstream").strip(),
             "https://github.com/other/dotfiles.git",
         )
-        before = self.git("remote", "-v")
-        result = self.run_fork("")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertEqual(self.git("remote", "-v"), before)
 
     def test_existing_configuration_is_backed_up(self):
         home = Path(self.temp.name) / "home"
@@ -487,7 +477,7 @@ class InstallerTests(unittest.TestCase):
         home = Path(self.temp.name) / "home"
         state = home / "state"
         state.mkdir(parents=True)
-        adapter = SimpleNamespace(WATCH_PATHS=[self.root / "vscode"])
+        adapter = SimpleNamespace(WATCH_PATHS=[self.root / "config/vscode"])
         with (
             patch.object(configuration.Path, "home", return_value=home),
             patch.object(apps, "STATE", state),
@@ -502,7 +492,7 @@ class InstallerTests(unittest.TestCase):
                 data["ProgramArguments"], [sys.executable, "-m", "src.install", "sync"]
             )
             self.assertEqual(data["WorkingDirectory"], str(self.root))
-            self.assertIn(str(self.root / "install.yaml"), data["WatchPaths"])
+            self.assertIn(str(self.root / "config/install.yaml"), data["WatchPaths"])
             self.assertIn(str(self.root / "src/apps/vscode.py"), data["WatchPaths"])
             self.assertFalse(any("sync.py" in p for p in data["ProgramArguments"]))
             apps.install_agent(self.root, ("vscode",))
@@ -529,8 +519,8 @@ class InstallerTests(unittest.TestCase):
         user = Path(self.temp.name) / "code-user"
         with patch.object(vscode, "PRIVATE", Path(self.temp.name) / "absent-private.jsonc"):
             vscode.sync_settings(user)
-        expected = vscode.read_jsonc(SOURCE / "vscode/settings.jsonc")
-        expected.update(vscode.read_jsonc(SOURCE / "vscode/extras.jsonc"))
+        expected = vscode.read_jsonc(SOURCE / "config/vscode/settings.jsonc")
+        expected.update(vscode.read_jsonc(SOURCE / "config/vscode/extras.jsonc"))
         actual = json.loads((user / "settings.json").read_text())
         self.assertTrue(
             all(
@@ -541,9 +531,9 @@ class InstallerTests(unittest.TestCase):
         )
         self.assertEqual(
             (user / "keybindings.json").read_text(),
-            (SOURCE / "vscode/keybindings.json")
+            (SOURCE / "config/vscode/keybindings.json")
             .read_text()
-            .replace("${vscodeDir}", (SOURCE / "vscode").as_uri()),
+            .replace("${vscodeDir}", (SOURCE / "config/vscode").as_uri()),
         )
 
     def test_moved_iterm_adapter_preserves_profile_identity_and_local_keys(self):
@@ -581,10 +571,8 @@ class InstallerTests(unittest.TestCase):
             main(["cleanup"], self.root)
         cleanup.assert_not_called()
 
-    def test_saved_apply_and_sync_reuse_choices_without_installing(self):
-        state = self.root / ".install/choices.local.json"
-        state.parent.mkdir()
-        state.write_text(json.dumps(self.choices))
+    def test_apply_and_sync_use_config_without_installing(self):
+        self.configure()
         with (
             patch("src.install.sys.platform", "darwin"),
             patch("builtins.input") as ask,
@@ -602,22 +590,25 @@ class InstallerTests(unittest.TestCase):
             main(["sync"], self.root)
             sync.assert_called_once_with(self.root, (), register_agent=False)
 
-    def test_saved_update_only_updates_selected_packages_and_configuration(self):
-        self.choices["setup-vscode"] = "i"
-        state = self.root / ".install/choices.local.json"
-        state.parent.mkdir()
-        state.write_text(json.dumps(self.choices))
+    def test_update_only_updates_configured_packages_and_settings(self):
+        self.selected.add("setup-vscode")
+        self.configure()
+        manifests = []
         with (
             patch("src.install.sys.platform", "darwin"),
             patch.dict("os.environ", {"DOTFILES_AFTER_PULL": "1"}),
             patch("builtins.input") as ask,
-            patch("src.install.run_shell") as install,
+            patch(
+                "src.install.run_shell",
+                side_effect=lambda *args: manifests.append(Path(args[2]).read_text()),
+            ) as install,
             patch.object(apps, "sync_apps"),
         ):
             main(["update"], self.root)
         install.assert_called_once()
         self.assertEqual(install.call_args.args[0:2], ("packages", "update"))
-        self.assertEqual(install.call_args.args[3:], ("cask", "visual-studio-code", "brew", "duti"))
+        self.assertEqual(len(install.call_args.args), 3)
+        self.assertEqual(manifests, ['cask "visual-studio-code"\nbrew "duti"\n'])
 
         ask.assert_not_called()
 

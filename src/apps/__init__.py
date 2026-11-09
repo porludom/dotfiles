@@ -12,10 +12,11 @@ from pathlib import Path
 from ..config import path
 from .base import STATE, SYNC, App
 from .base import write_if_changed as write_if_changed
+from .codex import Codex as Codex
 from .iterm import ITerm as ITerm
 from .vscode import VSCode as VSCode
 
-APPLICATIONS: dict[str, type[App]] = {"vscode": VSCode, "iterm": ITerm}
+APPLICATIONS: dict[str, type[App]] = {"vscode": VSCode, "iterm": ITerm, "codex": Codex}
 
 
 def sync_apps(root: Path, apps: tuple[str, ...], *, register_agent: bool = True):
@@ -45,8 +46,7 @@ def install_agent(root: Path, apps: tuple[str, ...]):
         root / "install",
         root / "src/system.sh",
         *sorted((root / "src").rglob("*.py")),
-        root / "install.yaml",
-        root / ".install/choices.local.json",
+        root / "config/install.yaml",
     ]
     for name in apps:
         watch.extend(APPLICATIONS[name]().WATCH_PATHS)

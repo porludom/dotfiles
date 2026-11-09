@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import json
-import re
 import shutil
 import sqlite3
 import subprocess
 from pathlib import Path
 from typing import Any
+
+import json5
 
 from ..config import path
 from .base import STATE, App, write_if_changed
@@ -126,20 +127,7 @@ class VSCode(App):
         write_if_changed(destination, content)
 
     def read_jsonc(self, path: Path) -> dict[str, Any]:
-        """Read JSON with comments and trailing commas without altering strings."""
-        text = path.read_text()
-        string = r'"(?:\\.|[^"\\])*"'
-        text = re.sub(
-            rf"({string})|//[^\n]*|/\*[\s\S]*?\*/",
-            lambda match: match[1] or "",
-            text,
-        )
-        text = re.sub(
-            rf"({string})|,\s*(?=[}}\]])",
-            lambda match: match[1] or "",
-            text,
-        )
-        return json.loads(text)
+        return json5.loads(path.read_text())
 
     def read_installed_extensions(self) -> set[str]:
         """Read the default profile's inventory without starting VS Code's CLI."""

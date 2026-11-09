@@ -1,9 +1,8 @@
-"""Choose setup stages, link dotfiles and apply settings."""
+"""Install configured stages, link dotfiles and apply settings."""
 
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import shlex
 import shutil
@@ -13,23 +12,7 @@ import tempfile
 from pathlib import Path
 
 from . import apps
-from .config import ROOT, Plan, collect_packages, load, load_catalog, path, resolve
-
-
-def prune_local(root: Path, plan: Plan):
-    for stage in plan.deleted:
-        for config in stage.configuration:
-            source = root / config.source
-            if config.destination and (Path.home() / config.destination).resolve().is_relative_to(
-                source.resolve()
-            ):
-                print(f"Keeping {config.source}: live configuration uses it.")
-                continue
-            if source.is_dir() and not source.is_symlink():
-                shutil.rmtree(source)
-            else:
-                source.unlink(missing_ok=True)
-            print(f"Deleted {config.source}")
+from .config import ROOT, Stage, collect_apps, collect_packages, load, load_catalog, path
 
 
 def run_shell(name, *args, **kwargs):
@@ -74,35 +57,26 @@ def link_home(source, destination):
         link_home(entry, destination / entry.name)
 
 
-def check_sources(root: Path, plan: Plan):
+def check_sources(root: Path, stages: tuple[Stage, ...]):
     if not (root / "home").is_dir():
         raise RuntimeError("Restore the repository home/ directory before applying dotfiles.")
-    for stage in plan.installed:
+    for stage in stages:
         for config in stage.configuration:
             if not (root / config.source).exists():
                 raise RuntimeError(f"Restore missing selected configuration first: {config.source}")
 
 
-def apply(root: Path, plan: Plan, command="apply"):
-    check_sources(root, plan)
+def apply(root: Path, stages: tuple[Stage, ...], command="apply"):
+    check_sources(root, stages)
     link_home(root / "home", Path.home())
-    for stage in plan.installed:
+    for stage in stages:
         print(f"Stage: {stage.title}")
         if command in {"install", "update"} and stage.packages:
             selected = collect_packages((stage,))
             with tempfile.NamedTemporaryFile(mode="w", suffix=".Brewfile") as temporary:
                 temporary.write("\n".join(p.brew_line() for p in selected) + "\n")
                 temporary.flush()
-                run_shell(
-                    "packages",
-                    command,
-                    temporary.name,
-                    *[
-                        v
-                        for p in selected
-                        for v in (p.kind, str(p.id) if p.kind == "mas" else p.name)
-                    ],
-                )
+                run_shell("packages", command, temporary.name)
         for config in stage.configuration:
             if not config.destination:
                 continue
@@ -125,7 +99,7 @@ def apply(root: Path, plan: Plan, command="apply"):
             elif extra == "vscode" and command == "install":
                 for association in load("vscode")["file_associations"]:
                     subprocess.run(shlex.split(association), check=True)
-    apps.sync_apps(root, plan.apps)
+    apps.sync_apps(root, collect_apps(stages))
 
 
 def macos_preferences():
@@ -137,38 +111,13 @@ def macos_preferences():
         subprocess.run(["killall", name], capture_output=True, check=False)
 
 
-def prompt(stages):
-    choices = {}
-    print(
-        "Install missing software/configuration, delete local stage sources, or keep untouched. No application is uninstalled."
-    )
-    for stage in stages:
-        while True:
-            answer = (
-                input(
-                    f"\n{stage.title}: {stage.description}\n[i] Install  [d] Delete from local  [k] Keep local [k]: "
-                )
-                .strip()
-                .lower()
-                or "k"
-            )
-            if answer in {"i", "d", "k"}:
-                choices[stage.id] = answer
-                break
-            print("Choose i, d or k.")
-    return choices
-
-
 def main(argv=None, root=ROOT):
     parser = argparse.ArgumentParser(prog="./install", description=__doc__)
     parser.add_argument(
         "command",
-        choices=["install", "apply", "update", "sync", "cleanup", "link"],
+        choices=["install", "apply", "update", "sync", "cleanup", "link", "fork"],
         nargs="?",
         default="install",
-    )
-    parser.add_argument(
-        "--choose", action="store_true", help="Review stage choices again during installation"
     )
     parser.add_argument("source", nargs="?", type=Path, help="Repository home directory to link")
     args = parser.parse_args(argv)
@@ -206,31 +155,19 @@ def main(argv=None, root=ROOT):
         os.execv("/bin/bash", ["bash", str(ROOT / "src/system.sh"), "--update", str(root)])
         return
 
-    state = root / ".install/choices.local.json"
-    fresh = command == "install" and (args.choose or not state.exists())
-    if not fresh and not state.exists():
-        raise RuntimeError("Choose stages with make install before apply/update/sync.")
-    catalog = load_catalog(root / "install.yaml")
-    choices = prompt(catalog) if fresh else json.loads(state.read_text())
-    plan = resolve(catalog, choices)
-    if fresh:
-        state.parent.mkdir(exist_ok=True)
-        state.write_text(json.dumps(choices, indent=2) + "\n")
-        state.chmod(0o600)
-    if command == "sync":
-        apps.sync_apps(root, plan.apps, register_agent=False)
+    if command == "fork":
+        run_shell("fork", cwd=root)
         return
-    apply(root, plan, command=command)
-    if command == "install":
-        prune_local(root, plan)
-        if fresh:
-            answer = input("\nCreate a GitHub fork and use it as origin? [y/N]: ")
-            run_shell("fork", answer, cwd=root)
+    stages = load_catalog(root)
+    if command == "sync":
+        apps.sync_apps(root, collect_apps(stages), register_agent=False)
+        return
+    apply(root, stages, command=command)
     print("Dotfiles applied. Review changes, then stage, commit and push them yourself.")
 
 
 if __name__ == "__main__":
     try:
         main()
-    except (EOFError, KeyboardInterrupt):
-        raise SystemExit("Interrupted; no consent was assumed.") from None
+    except KeyboardInterrupt:
+        raise SystemExit("Interrupted.") from None

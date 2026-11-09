@@ -1,22 +1,46 @@
 # riZZZhik's dotfiles
 
+Personal macOS setup.
+
+## Clone
+
 ```sh
 git clone https://github.com/riZZZhik/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-make install
 ```
 
-Choose **Install**, **Delete from local**, or **Keep local** for each setup stage.
-Finish Command Line Tools setup if prompted, then rerun. Apps are never uninstalled.
+## Customize
 
-`install` bootstraps the installer. Source code lives in `src/`.
-`install.yaml` lists setup stages in order.
-Actions: `brew`, `cask`, `mas`, `link`, and named `extras` for apps and macOS settings.
-`home/` always maps onto `~/` using real directories and linked files, with backups.
+Review these files **before installing**:
 
-Delete removes repository sources, including local edits; committed versions remain in Git.
-The final prompt can create a GitHub fork and switch `origin` to it.
-Review local changes, then stage, commit and push them yourself.
+| File                            | What to customize                                                             |
+| ------------------------------- | ----------------------------------------------------------------------------- |
+| `config/install.yaml`           | Apps, macOS preferences and entire `setup-*` stages.                          |
+| `pyproject.toml`                | Personal Python libraries in `global`. Keep `installer` intact.               |
+| `.python-version`               | Default Python version, managed by uv.                                        |
+| `home/`                         | Always linked into `~/`; review every file. Existing conflicts are backed up. |
+| `config/{vscode,iterm2,codex}/` | Settings for the app stages you keep.                                         |
 
-`make apply` reapplies saved choices; `make update` updates selected components;
-`make cleanup` clears package caches.
+For example, remove `spotify` from `setup-desktop.cask` to skip Spotify,
+or add `requests` to the `global` Python group. Remove a whole `setup-*` block to skip that stage.
+Removing entries does not uninstall existing software.
+
+## Install
+
+```sh
+./install
+```
+
+All remaining stages run without a confirmation menu. If Command Line Tools setup
+opens, finish it and rerun. App backups go to `.private/backups/`.
+Review local changes, then commit and push them yourself.
+
+## Maintain
+
+- `./install apply` — relink files and reapply app settings.
+- `./install update` — pull changes and update configured software.
+- `./install cleanup` — clear package caches.
+- `./install fork` — create a GitHub fork and switch `origin`, without pushing.
+
+Only installation and updates reconcile Python and shared libraries. Other commands
+use the installed runtime; `./install --help` performs no setup.

@@ -1,4 +1,4 @@
-"""Setup configuration, validated stages and selection."""
+"""Load and validate setup stages."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def load(name: str) -> dict[str, Any]:
-    document = yaml.safe_load((ROOT / "install.yaml").read_text())
+    document = yaml.safe_load((ROOT / "config/install.yaml").read_text())
     return document["settings"]["sync"] if name == "sync" else document["setup-" + name]["settings"]
 
 
@@ -62,26 +62,12 @@ class Stage:
     actions: tuple[str, ...] = ()
 
 
-@dataclass(frozen=True)
-class Plan:
-    installed: tuple[Stage, ...]
-    deleted: tuple[Stage, ...]
-
-    @property
-    def packages(self) -> tuple[Package, ...]:
-        return collect_packages(self.installed)
-
-    @property
-    def apps(self) -> tuple[str, ...]:
-        return tuple(c.adapter for b in self.installed for c in b.configuration if c.adapter)
-
-
-def load_catalog(path: Path) -> tuple[Stage, ...]:
+def load_catalog(root: Path) -> tuple[Stage, ...]:
     stages = []
     owners: dict[Path, str] = {}
     destinations: set[str] = set()
-    root = path.parent.resolve()
-    document = yaml.safe_load(path.read_text())
+    root = root.resolve()
+    document = yaml.safe_load((root / "config/install.yaml").read_text())
     for stage_id, settings in document.items():
         if stage_id == "settings":
             continue
@@ -98,7 +84,14 @@ def load_catalog(path: Path) -> tuple[Stage, ...]:
         if unknown:
             raise ValueError(f"Unknown actions in {stage_id}: {', '.join(sorted(unknown))}")
         extras = settings.get("extras", ())
-        if set(extras) - {"shell-plugins", "sudo-touch-id", "macos-defaults", "vscode", "iterm"}:
+        if set(extras) - {
+            "shell-plugins",
+            "sudo-touch-id",
+            "macos-defaults",
+            "vscode",
+            "iterm",
+            "codex",
+        }:
             raise ValueError(f"Unknown extras in {stage_id}.")
         for kind in ("brew", "cask", "mas"):
             if kind in settings:
@@ -116,7 +109,7 @@ def load_catalog(path: Path) -> tuple[Stage, ...]:
         configs = tuple(Configuration(**c) for c in settings.get("link", ())) + tuple(
             Configuration(document["setup-" + name]["settings"]["shared"], adapter=name)
             for name in extras
-            if name in {"vscode", "iterm"}
+            if name in {"vscode", "iterm", "codex"}
         )
         packages = tuple(
             Package(kind, name, values[name] if kind == "mas" else 0)
@@ -154,22 +147,12 @@ def load_catalog(path: Path) -> tuple[Stage, ...]:
     return tuple(stages)
 
 
-def resolve(stages: tuple[Stage, ...], choices: dict[str, str]) -> Plan:
-    # Continue using choices saved by the earlier bundle-based installer.
-    if choices and all(not key.startswith("setup-") for key in choices):
-        choices = {
-            "setup-terminal" if k == "shell" else "setup-" + k: v for k, v in choices.items()
-        }
-    if set(choices) != {b.id for b in stages} or any(
-        v not in {"i", "d", "k"} for v in choices.values()
-    ):
-        raise ValueError("Saved choices do not match the catalog; rerun install with --choose.")
-    installed = tuple(b for b in stages if choices[b.id] == "i")
-    return Plan(installed, tuple(b for b in stages if choices[b.id] == "d"))
-
-
 def collect_packages(stages: tuple[Stage, ...]) -> tuple[Package, ...]:
     packages = {(p.kind, p.name): p for stage in stages for p in stage.packages}
     if any(p.kind == "mas" for p in packages.values()):
         packages[("brew", "mas")] = Package("brew", "mas")
     return tuple(packages.values())
+
+
+def collect_apps(stages: tuple[Stage, ...]) -> tuple[str, ...]:
+    return tuple(c.adapter for stage in stages for c in stage.configuration if c.adapter)

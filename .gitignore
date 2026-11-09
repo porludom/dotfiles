@@ -1,4 +1,5 @@
 # Project ignores
+.private/
 .install/choices.local.json
 .install/backups/
 .install/venv/
