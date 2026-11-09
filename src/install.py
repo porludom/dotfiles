@@ -163,13 +163,14 @@ def main(argv=None, root=ROOT):
     parser = argparse.ArgumentParser(prog="./install", description=__doc__)
     parser.add_argument(
         "command",
-        choices=["install", "apply", "update", "sync", "cleanup"],
+        choices=["install", "apply", "update", "sync", "cleanup", "link"],
         nargs="?",
         default="install",
     )
     parser.add_argument(
         "--choose", action="store_true", help="Review stage choices again during installation"
     )
+    parser.add_argument("source", nargs="?", type=Path, help="Repository home directory to link")
     args = parser.parse_args(argv)
     if sys.platform != "darwin":
         parser.error("This installer supports macOS only.")
@@ -178,6 +179,25 @@ def main(argv=None, root=ROOT):
         + os.environ.get("PATH", "")
     )
     command = args.command
+    if command == "link":
+        if args.source is None or not args.source.is_dir():
+            parser.error("link requires an existing repository home directory")
+        source = args.source.resolve()
+        home = Path.home()
+        if home.resolve().is_relative_to(source):
+            parser.error("the source must not contain your home directory")
+        link_home(source, home)
+        for entry in home.iterdir():
+            if (
+                entry.is_symlink()
+                and not entry.exists()
+                and entry.resolve().is_relative_to(source.parent)
+            ):
+                entry.unlink()
+        print("Dotfiles linked.")
+        return
+    if args.source is not None:
+        parser.error("a source directory is only valid with link")
     if command == "cleanup":
         run_shell("packages", "cleanup")
         print("Package caches cleaned.")
