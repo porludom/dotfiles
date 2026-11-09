@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-
-set -e
-
-CONFIG="install.conf.yaml"
-DOTBOT_DIR="dotbot"
-
-DOTBOT_BIN="bin/dotbot"
-BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-cd "${BASEDIR}"
-git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
-git submodule update --init --recursive "${DOTBOT_DIR}"
-
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")"
+if [[ "$(uname -s)" != Darwin ]]; then
+  echo 'This installer supports macOS only.' >&2
+  exit 1
+fi
+if ! xcode-select -p >/dev/null 2>&1; then
+  xcode-select --install
+  printf 'Finish installing Command Line Tools, then rerun this command.\n' >&2
+  exit 1
+fi
+if ! python3 -c 'import yaml' >/dev/null 2>&1; then
+  PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --user 'PyYAML>=6,<7'
+fi
+exec python3 -m src.install "$@"
