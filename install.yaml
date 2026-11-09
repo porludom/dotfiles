@@ -112,6 +112,7 @@ setup-desktop:
     - zoom                        # https://zoom.us
     - netron                      # https://netron.app
     - transmission                # https://transmissionbt.com
+    - the-unarchiver              # https://theunarchiver.com
     - bartender                   # https://macbartender.com
     - karabiner-elements          # https://karabiner-elements.pqrs.org
     - linearmouse                 # https://linearmouse.app
@@ -127,7 +128,6 @@ setup-desktop:
     MyWallpaper: 1552826194
     GoodNotes: 1444383602
     Notability: 360593530
-    The Unarchiver: 425424353
 
 setup-vscode:
   title: VS Code

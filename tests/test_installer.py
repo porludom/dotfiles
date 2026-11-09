@@ -386,9 +386,13 @@ class InstallerTests(unittest.TestCase):
         )
 
     def test_package_update_is_limited_to_selection_and_dependencies(self):
-        self.shell_command("mas", 'echo "mas $*" >> "$COMMAND_LOG"\n')
         self.shell_command(
-            "brew", 'echo "$*" >> "$COMMAND_LOG"\n[[ "$*" != "list --formula missing" ]]\n'
+            "mas", '[[ "$MAS_NO_AUTO_INDEX" == 1 ]]\necho "mas $*" >> "$COMMAND_LOG"\n'
+        )
+        self.shell_command(
+            "brew",
+            '[[ "$MAS_NO_AUTO_INDEX" == 1 ]]\necho "$*" >> "$COMMAND_LOG"\n'
+            '[[ "$*" != "list --formula missing" ]]\n',
         )
         result = self.run_shell(
             "packages.sh",

@@ -53,6 +53,7 @@ packages() (
   [[ $# -gt 0 ]] || exit 0
   homebrew
   export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
+  export MAS_NO_AUTO_INDEX=1
   mas_ids=()
   if [[ "$action" == update ]]; then
     brew update
