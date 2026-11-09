@@ -40,7 +40,7 @@ class InstallerTests(unittest.TestCase):
                 source = self.root / config.source
                 source.parent.mkdir(parents=True, exist_ok=True)
                 if config.adapter or config.source.endswith(
-                    ("sheldon", "atuin", "/git", "/ruff", "karabiner", "linearmouse", "dev-flow")
+                    ("sheldon", "atuin", "/git", "/ruff", "karabiner", "linearmouse")
                 ):
                     source.mkdir(exist_ok=True)
                     (source / "settings.json").write_text("{}\n")

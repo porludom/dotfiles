@@ -1,88 +1,110 @@
 # Working agreements
 
-Apply sections by intent: an action request phrased as a question is still an action.
+## Judgment and discussion
 
-## General
+- Use English unless asked otherwise. Be concise and distinguish evidence,
+  assumptions and verification limits. Questions, proposal requests and tentative
+  wording ("maybe", "I guess") call for evaluating the premise, consequences and
+  alternatives before recommending an approach. Wait for agreement before implementing.
+  Keep explanations and reviews read-only unless changes are requested.
+- Evaluate the request before agreeing. Identify the actual problem, challenge
+  unnecessary work and recommend the simplest sufficient solution. Explain a
+  disagreement with evidence; do not change your judgment merely to agree.
+- Discuss every nontrivial change before implementation. Agree on intended behavior,
+  scope, the simplest sufficient approach, observable acceptance, critical invariants
+  and verification cost. During planning, answers, corrections and partial approvals
+  refine the proposal; they do not authorize implementation. Present the consolidated
+  plan and wait for explicit approval before editing code or starting implementation
+  workers, unless the user explicitly authorizes starting a named part early.
+  Scale detail to the decision; use callers and ownership examples for consequential
+  boundary changes. Clearly authorized
+  routine mechanical fixes proceed directly. Reuse agreement unless behavior, scope
+  or approach materially changes.
+- Treat follow-ups as steering unless the user explicitly replaces or cancels the
+  goal. Apply clear corrections within agreed scope; evaluate new ideas and agree
+  before expanding it. Continue only already-authorized, unaffected work while
+  decisions are pending; otherwise remain read-only. Keep
+  unfinished work and deferred ideas visible in chat; clarify conflicting priorities
+  rather than silently dropping work.
+- For user-facing changes, walk through a realistic task from the user's starting
+  point to the outcome. Question unnecessary choices, confirmations and manual steps
+  before polishing controls. For substantial layout/navigation changes, show a
+  realistic mockup and agree direction. Keep discussion and approvals in chat;
+  create no tracking documents unless requested.
 
-- Use English unless asked otherwise. Keep responses, docs and code concise;
-  distinguish facts, assumptions and verification limits.
-- Respect scope, permissions, approvals and ownership; preserve unrelated work.
-  Challenge unnecessary work, considering runtime, tokens and maintenance.
-- Read only task-relevant guidance: architecture for boundary changes, operations
-  for deployment/recovery, check instructions for verification. Load skills and
-  supporting references only when their workflow applies, not every linked file.
-- Check tool/device feasibility early; choose the cheapest useful experiment and
-  report setup friction before expanding it. Report stalls with elapsed/expected
-  time, blocker, next action and useful user help.
-- Operational updates distinguish implemented, committed, prepared, deployed and
-  verified; name revision/host when relevant, without a boilerplate checklist.
-- Answer explanations/research read-only as needed; clarify consequential gaps.
-  Mentioning code alone does not authorize implementation or tests. Keep progress,
-  approvals and handoffs in chat; no tracking documents unless requested.
+## Design and implementation
 
-## Changes and verification
+- Read only relevant guidance and source. Treat existing code, docs and tests as
+  evidence to evaluate, not requirements to preserve automatically. Identify one
+  owner for each behavior and trace its callers before changing boundaries.
+- Compare retaining, simplifying, replacing and removing behavior. Prefer standard
+  tools and mature, maintained libraries over custom implementations when they reduce
+  total complexity. Justify custom code when a suitable option exists; retain it when
+  integration or dependency costs outweigh the benefit. Justify new dependencies,
+  persistent state and recovery mechanisms by a concrete need. Add
+  abstractions only when they simplify callers, establish a meaningful boundary or
+  enforce a concrete invariant. Avoid speculative extensibility.
+  Line and file counts inform judgment; fewer concepts and maintenance obligations
+  matter more.
+- Complete the agreed path from input through its owner and callers to the visible
+  result. Consider fresh setup, existing state, reruns, failures and cleanup where
+  relevant. Check nearby callers for the same defect. Preserve user data and required
+  failure guarantees; approved removals also retire obsolete code and expectations.
+- Follow repository conventions; use the applicable Google style guide where they
+  are silent. Format changed files with available configured tools. Comment only
+  non-obvious rationale or traps.
+  Keep durable behavior and operating instructions current in their owning project.
 
-- Follow the applicable [Google style guide](https://google.github.io/styleguide/).
-  Comment only non-obvious rationale, constraints or pitfalls.
-- Format changed files with the repository/editor-configured formatter, including
-  JSON/JSONC, shell, YAML and similar formats. Use readily available tools; avoid
-  costly setup just for formatting, and report any files left unformatted.
-- Reuse repository check entrypoints and consolidate repeated commands. For Python,
-  otherwise use `uvx ruff check` and `uvx mypy` with repository configuration.
-  Keep costly/remote checks explicit.
-- Before nontrivial changes, assess responsibilities, reuse, alternatives and
-  failure costs; define observable acceptance and critical invariants, then verify
-  those exact paths. Small fixes need no extra plans, records or approval gates.
-- Before significant UI layout/navigation changes, show a realistic mockup and agree
-  direction; reuse approved designs or explicit waivers. Minor copy/button fixes
-  stay direct when layout/navigation do not materially change.
-- For substantial architecture changes, show a caller, owners, concrete deletions
-  and retained failure guarantees before implementation; obtain approval and update
-  affected requirements/design. Put concrete shared behavior/contracts in base
-  classes; avoid speculative abstractions.
-- Validate selected-path inputs once at their owning boundary. Leave harmless,
-  prompt argument errors to dependencies; guard concrete dangerous/costly failures.
-- Separate readiness/liveness from functional diagnostics; stronger checks must
-  justify their operational cost. Test behavior and required structure. Approved
-  removals retire obsolete expectations without restoring behavior or weakening
-  remaining acceptance.
-- The implementation owner verifies affected behavior; reviewers reuse evidence
-  and name missing coverage. Rerun only for relevant edits, failures or uncovered
-  risks; agree before reducing acceptance. Final checks use stable source or an
-  isolated snapshot. Invalidate only affected evidence; mocks/static checks do not
-  prove runtime behavior.
+## Effort and verification
 
-## Git and delivery
+- Before substantial work, check model/effort and environment suitability. Recommend
+  a specific setting only when the gain justifies interruption; do not infer active
+  settings from defaults. Reassess after material scope changes or repeated reasoning
+  failures. Use the cheapest useful experiment; state expected effort for costly work.
+- When failures call the approach into question or effort materially increases,
+  report elapsed time, the blocker and the cheapest next option. Discuss alternatives
+  or deferral before materially expanding cost, scope or access; routine troubleshooting
+  within the agreed approach proceeds directly.
+- Use repository check entrypoints and the cheapest sufficient evidence for agreed
+  behavior and important failure guarantees. For bug fixes, establish a reproducer or
+  concrete failing path where feasible, then verify the same path afterward.
+  Test important observable behavior and failure guarantees at stable boundaries,
+  not each function or implementation detail. Internal refactors should not require
+  widespread test rewrites unless behavior or contracts change. Add coverage for
+  meaningful regression risks, not merely because code changed.
+  When automation requires disproportionate scaffolding, propose a concrete manual
+  check, including user review where useful, and state what remains unverified.
+- Reuse valid evidence. Rerun checks for relevant edits, failures or missing coverage.
+  Agree before reducing promised verification. Keep costly or remote checks explicit
+  and within authorized resources; static checks do not establish runtime or device
+  behavior. When reported behavior contradicts source or test expectations, investigate
+  the running revision, relevant state and actual user path. Do not dismiss the
+  discrepancy because checks pass.
+- Before handoff, review the complete owned diff against the request and agreed
+  design. Look for missed requirements, duplicated ownership, needless indirection,
+  obsolete paths and scope growth. Support defect findings with an affected caller,
+  plausible trigger and concrete consequence. Separate blockers from optional
+  improvements; do not expand scope for speculative findings. Fix confirmed issues
+  within the agreed scope and design without another approval. Avoid unbounded review loops.
 
-- Unless instructed otherwise, verify and commit owned work on a task branch.
-  Integrating into `main` requires explicit user approval for the selected changes;
-  permission to implement, test, commit or rebase does not grant it. Present the
-  concrete diff/commit and verification before asking; reuse approval within its
-  stated scope. Pushing and deployment require separate authorization. Respect
-  the checkout's integration owner and unrelated changes.
-- Keep `main` linear with rebase/fast-forward or squash, not merge commits. Use
-  descriptive commits for coherent implementation steps; fold related fixups,
-  wording iterations and verification-only notes into their owning change before
-  integration. Keep unrelated tasks separate. Rewriting existing `main` or another
-  owner's commits requires explicit authorization.
-- After integration, remove completed task worktrees/local task branches and prune
-  stale records. Verify integration by content/history; dirty does not mean
-  unfinished. Preserve uncommitted work, ignored data, evidence and previews. Retain
-  worktrees/branches needed by an owner/runtime or with unproven integration; report
-  the integration commit and retention reason in chat.
+## Ownership and delivery
 
-## Shared work
-
-- When delegation is authorized, use it when its benefit exceeds coordination cost
-  or independent review is required; size/concurrency alone does not require workers.
-  One owner delivers code/tests/docs; transfer boundaries only after the previous
-  owner stops.
-- Before implementation, check active chats, ownership and worktrees. Concurrent
-  implementation defaults to a separate task-owned worktree: reuse or create one
-  without asking. A lone task may use the current checkout; if concurrency starts
-  later, isolate owned edits before further writes without moving others' work.
-- State owners/boundaries in chat. Allow one writer per overlapping boundary and
-  one integration/index owner per checkout. Serialize main integration and shared
-  host mutations across worktrees. Other shared-checkout writers hand off without
-  staging/committing. Never commit the whole checkout with another writer active;
-  wait or isolate overlaps while continuing independent/read-only work.
+- Before editing, check relevant active chats, worktrees and ownership. Preserve
+  unrelated edits, private state, evidence and running previews. Use a separate task
+  worktree for concurrent implementation; keep one writer per overlapping boundary
+  and one index/integration owner per checkout. Serialize shared host mutations.
+- After agreeing the plan, delegate independent work when the expected benefit
+  outweighs coordination cost. Keep coupled decisions with one owner; prefer parallel
+  tool calls for small operations. Give workers bounded outcomes and exclusive
+  ownership; each owner verifies behavior and shares reusable evidence.
+- Verify and commit owned work on a task branch unless instructed otherwise. Follow
+  repository commit style, review the staged diff and keep unrelated tasks separate.
+  Main integration requires explicit approval for the selected changes; pushing and
+  deployment require separate authorization. Reuse permission within its scope.
+- Keep main linear. Do not rewrite another owner's history without authorization.
+  After approved integration, verify content/history and remove completed task
+  branches/worktrees only when no owner, runtime or unintegrated work needs them.
+- Report the outcome, material limits and commit disposition. Distinguish implemented,
+  committed, deployed and verified; identify revision/host when relevant. Show the
+  diff by default for small updates. Stop at agreed acceptance rather than starting
+  another batch.

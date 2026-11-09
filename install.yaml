@@ -89,8 +89,6 @@ setup-codex:
       destination: .codex/AGENTS.md
     - source: codex/keybindings.json
       destination: .codex/keybindings.json
-    - source: codex/skills/dev-flow
-      destination: .agents/skills/dev-flow
     - source: codex/config.toml
       destination: .codex/config.toml
       mode: seed
