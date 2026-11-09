@@ -1,0 +1,181 @@
+{
+  "workbench.colorTheme": "Catppuccin Frappé",
+  "workbench.iconTheme": "material-icon-theme",
+
+  "workbench.experimental.modernUI": false,
+  "workbench.sideBar.location": "right",
+  "window.titleBarStyle": "custom",
+  "window.title": "${activeEditorMedium}${separator}${rootName}${separator}${remoteName}",
+  "window.restoreFullscreen": true,
+  "window.commandCenter": false,
+  "workbench.layoutControl.enabled": false,
+
+  "editor.fontFamily": "'FiraCode Nerd Font', 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 23,
+  "editor.fontLigatures": true,
+
+  "editor.cursorStyle": "line",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+
+  "editor.lineNumbers": "relative",
+  "editor.rulers": [100],
+  "editor.minimap.enabled": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.minimap.autohide": "mouseover",
+  "indentRainbow.indicatorStyle": "light",
+  "indentRainbow.colors": [
+    "rgba(255,255,64,0.3)",
+    "rgba(127,255,127,0.3)",
+    "rgba(255,127,255,0.3)",
+    "rgba(79,236,236,0.3)",
+  ],
+
+  "editor.linkedEditing": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.accessibilitySupport": "off",
+  "diffEditor.ignoreTrimWhitespace": false,
+
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "workbench.editorAssociations": {
+    "*.wav": "wavPreview.audioPreview",
+    "*.mp3": "wavPreview.audioPreview",
+    "git-rebase-todo": "gitlens.rebase",
+  },
+
+  "files.exclude": {
+    ".idea": true,
+    "**/__pycache__": true,
+    "**/.ipynb_checkpoints": true,
+    "**/.mypy_cache": true,
+    "**/.ruff_cache": true,
+    "**/.pytest_cache": true,
+    "**/*.synctex.gz": true,
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/venv/**": true,
+    "**/.venv/**": true,
+  },
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "files.associations": {
+    ".env*": "dotenv",
+  },
+
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontFamily": "'FiraCode Nerd Font', 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace",
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.defaultProfile.linux": "zsh",
+
+  "git.autofetch": true,
+  "git.detectWorktrees": true,
+  "git.confirmSync": false,
+  "git.inputValidationSubjectLength": 72,
+  "git.ignoreRebaseWarning": true,
+  "git.enableCommitSigning": false,
+  "git.replaceTagsWhenPull": true,
+  "git.openRepositoryInParentFolders": "never",
+  "nestor.commitMessagePrompt": "Follow Conventional Commits.\nFormat logs like \"[ACTION] short description\", where ACTIONS is ADD, UPD, DEL, REMOVE, ...",
+  "gitlens.graph.details.location": "auto",
+
+  "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.showToolbar": "always",
+  "editor.inlineSuggest.edits.showCollapsed": true,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false,
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "gitlab.duoChat.enabled": false,
+  "editor.aiStats.enabled": true,
+  "chat.mcp.gallery.enabled": true,
+  "claudeCode.preferredLocation": "panel",
+  "chat.disableAIFeatures": true,
+
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "explicit",
+      "source.fixAll.ruff": "explicit",
+    },
+  },
+  "ruff.configurationPreference": "filesystemFirst",
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.gotoDefinitionInStringLiteral": true,
+  "python.analysis.importFormat": "relative",
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.pytestParameters": true,
+  "python.analysis.inlayHints.callArgumentNames": "partial",
+  "python.createEnvironment.trigger": "off",
+  "jupyter.askForKernelRestart": false,
+
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+  },
+  "C_Cpp.clang_format_fallbackStyle": "Google",
+  "C_Cpp.clang_format_sortIncludes": true,
+  "go.toolsManagement.autoUpdate": true,
+
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": false,
+  },
+  "yaml.customTags": ["!reference sequence"],
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+  },
+
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers",
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+  },
+  "[proto3]": {
+    "editor.defaultFormatter": "DrBlury.protobuf-vsc",
+  },
+
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+  },
+  "markdownlint.config": {
+    "MD024": false,
+  },
+  "markdown.extension.toc.levels": "2..6",
+  "markdown.extension.toc.omittedFromToc": {
+    "README.md": ["## Table of Contents"],
+  },
+  "errorLens.enabled": true,
+  "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+  "errorLens.excludeBySource": ["cSpell"],
+  "todo-tree.highlights.enabled": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "security.promptForRemoteFileProtocolHandling": false,
+  "remote.SSH.localServerDownload": "always",
+
+  "redhat.telemetry.enabled": true,
+  "vscord.status.problems.enabled": false,
+  "vscord.status.state.text.editing": "Working on {file_name}{file_extension}",
+  "vscord.status.idle.timeout": 3600,
+}
