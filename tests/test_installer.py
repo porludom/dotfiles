@@ -13,8 +13,8 @@ from unittest.mock import Mock, patch
 import yaml
 
 from src import apps
+from src import cli as installer
 from src import config as model
-from src import install as installer
 
 SOURCE = Path(__file__).resolve().parents[1]
 main = installer.main
@@ -30,7 +30,7 @@ class InstallerTests(unittest.TestCase):
         self.root = Path(self.temp.name) / "repo with spaces"
         self.root.mkdir(parents=True)
         (self.root / "config").mkdir()
-        shutil.copy2(SOURCE / "config/install.yaml", self.root / "config/install.yaml")
+        shutil.copy2(SOURCE / "config/setup.yaml", self.root / "config/setup.yaml")
         shutil.copytree(SOURCE / "home", self.root / "home")
         shutil.copytree(
             SOURCE / "src", self.root / "src", ignore=shutil.ignore_patterns("__pycache__")
@@ -58,7 +58,7 @@ class InstallerTests(unittest.TestCase):
         home_patch.start()
         self.addCleanup(home_patch.stop)
         self.selected = set()
-        fork = patch("src.install.run_shell")
+        fork = patch("src.cli.run_shell")
         fork.start()
         self.addCleanup(fork.stop)
 
@@ -69,7 +69,7 @@ class InstallerTests(unittest.TestCase):
         return tuple(stage for stage in self.catalog if stage.id in self.selected)
 
     def configure(self):
-        path = self.root / "config/install.yaml"
+        path = self.root / "config/setup.yaml"
         document = yaml.safe_load(path.read_text())
         path.write_text(
             yaml.safe_dump(
@@ -95,7 +95,7 @@ class InstallerTests(unittest.TestCase):
                 "setup-iterm",
             ],
         )
-        document = yaml.safe_load((self.root / "config/install.yaml").read_text())
+        document = yaml.safe_load((self.root / "config/setup.yaml").read_text())
         for name in ("macos", "vscode", "iterm"):
             self.assertIn("settings", document["setup-" + name])
             self.assertNotIn(name, document["settings"])
@@ -109,7 +109,7 @@ class InstallerTests(unittest.TestCase):
         self.assertNotIn("tldr", names)
 
     def test_catalog_rejects_overlapping_ownership(self):
-        path = self.root / "config/install.yaml"
+        path = self.root / "config/setup.yaml"
         settings = yaml.safe_load(path.read_text())
         settings["setup-vscode"]["link"] = [{"source": "config/iterm2", "adapter": "iterm"}]
         path.write_text(yaml.safe_dump(settings))
@@ -130,7 +130,7 @@ class InstallerTests(unittest.TestCase):
         with patch.object(configuration.subprocess, "run") as run:
             configuration.macos_preferences()
         commands = [call.args[0] for call in run.call_args_list if call.args[0][0] == "defaults"]
-        self.assertEqual(len(commands), 17)
+        self.assertEqual(len(commands), 19)
         self.assertIn(
             ["defaults", "-currentHost", "write", "com.apple.controlcenter", "Sound", "-int", "18"],
             commands,
@@ -167,13 +167,25 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(len(log.read_text().splitlines()), 6)
 
     def test_unknown_stage_actions_are_rejected(self):
-        path = self.root / "config/install.yaml"
+        path = self.root / "config/setup.yaml"
         path.write_text("setup-test: {title: Test, description: Test, mystery: true}\n")
         with self.assertRaisesRegex(ValueError, "Unknown actions"):
             model.load_catalog(self.root)
 
+    def test_sync_extras_keep_app_identities_and_reject_old_action_names(self):
+        self.assertEqual(model.collect_apps(self.catalog), ("codex", "vscode", "iterm"))
+        path = self.root / "config/setup.yaml"
+        document = yaml.safe_load(path.read_text())
+        for name in ("codex", "vscode", "iterm"):
+            with self.subTest(name=name):
+                document["setup-" + name]["extras"] = [name]
+                path.write_text(yaml.safe_dump(document))
+                with self.assertRaisesRegex(ValueError, "Unknown extras"):
+                    model.load_catalog(self.root)
+                document["setup-" + name]["extras"] = [name + "-sync"]
+
     def test_scalar_package_action_is_rejected_before_installation(self):
-        path = self.root / "config/install.yaml"
+        path = self.root / "config/setup.yaml"
         data = yaml.safe_load(path.read_text())
         data["setup-terminal"]["brew"] = "git"
         path.write_text(yaml.safe_dump(data))
@@ -215,7 +227,7 @@ class InstallerTests(unittest.TestCase):
         before = self.git("diff", "--cached")
         self.configure()
         with (
-            patch("src.install.sys.platform", "darwin"),
+            patch("src.cli.sys.platform", "darwin"),
             patch("builtins.input", side_effect=AssertionError("Unexpected prompt")),
         ):
             main(["install"], self.root)
@@ -308,16 +320,16 @@ class InstallerTests(unittest.TestCase):
         self.selected.add("setup-desktop")
         self.configure()
         with (
-            patch("src.install.sys.platform", "darwin"),
-            patch("src.install.run_shell", side_effect=RuntimeError("package failed")),
+            patch("src.cli.sys.platform", "darwin"),
+            patch("src.cli.run_shell", side_effect=RuntimeError("package failed")),
             self.assertRaisesRegex(RuntimeError, "package failed"),
         ):
             main(["install"], self.root)
         self.assertEqual(self.git("diff", "--cached", "--name-only"), "")
         with (
-            patch("src.install.sys.platform", "darwin"),
+            patch("src.cli.sys.platform", "darwin"),
             patch("builtins.input") as ask,
-            patch("src.install.run_shell"),
+            patch("src.cli.run_shell"),
         ):
             main(["install"], self.root)
             ask.assert_not_called()
@@ -499,11 +511,9 @@ class InstallerTests(unittest.TestCase):
             apps.install_agent(self.root, ("vscode", "codex"))
             agent = home / "Library/LaunchAgents/com.dotfiles.sync.plist"
             data = plistlib.loads(agent.read_bytes())
-            self.assertEqual(
-                data["ProgramArguments"], [sys.executable, "-m", "src.install", "sync"]
-            )
+            self.assertEqual(data["ProgramArguments"], [sys.executable, "-m", "src.cli", "sync"])
             self.assertEqual(data["WorkingDirectory"], str(self.root))
-            self.assertIn(str(self.root / "config/install.yaml"), data["WatchPaths"])
+            self.assertIn(str(self.root / "config/setup.yaml"), data["WatchPaths"])
             self.assertIn(str(self.root / "src/apps/vscode.py"), data["WatchPaths"])
             self.assertIn(str(codex_adapter.SHARED), data["WatchPaths"])
             self.assertIn(codex_config["destination"], data["WatchPaths"])
@@ -578,8 +588,8 @@ class InstallerTests(unittest.TestCase):
 
     def test_unsupported_platform_stops_before_any_operation(self):
         with (
-            patch("src.install.sys.platform", "linux"),
-            patch("src.install.run_shell") as cleanup,
+            patch("src.cli.sys.platform", "linux"),
+            patch("src.cli.run_shell") as cleanup,
             self.assertRaises(SystemExit),
         ):
             main(["cleanup"], self.root)
@@ -588,9 +598,9 @@ class InstallerTests(unittest.TestCase):
     def test_apply_and_sync_use_config_without_installing(self):
         self.configure()
         with (
-            patch("src.install.sys.platform", "darwin"),
+            patch("src.cli.sys.platform", "darwin"),
             patch("builtins.input") as ask,
-            patch("src.install.run_shell") as install,
+            patch("src.cli.run_shell") as install,
             patch.object(configuration, "apply") as apply,
         ):
             main(["apply"], self.root)
@@ -598,7 +608,7 @@ class InstallerTests(unittest.TestCase):
             install.assert_not_called()
             ask.assert_not_called()
         with (
-            patch("src.install.sys.platform", "darwin"),
+            patch("src.cli.sys.platform", "darwin"),
             patch.object(apps, "sync_apps") as sync,
         ):
             main(["sync"], self.root)
@@ -612,7 +622,7 @@ class InstallerTests(unittest.TestCase):
         vscode_adapter = Mock()
         iterm_adapter = Mock()
         with (
-            patch("src.install.sys.platform", "darwin"),
+            patch("src.cli.sys.platform", "darwin"),
             patch.object(apps, "STATE", self.root / "state"),
             patch.dict(
                 apps.APPLICATIONS,
@@ -640,11 +650,11 @@ class InstallerTests(unittest.TestCase):
         self.configure()
         manifests = []
         with (
-            patch("src.install.sys.platform", "darwin"),
+            patch("src.cli.sys.platform", "darwin"),
             patch.dict("os.environ", {"DOTFILES_AFTER_PULL": "1"}),
             patch("builtins.input") as ask,
             patch(
-                "src.install.run_shell",
+                "src.cli.run_shell",
                 side_effect=lambda *args: manifests.append(Path(args[2]).read_text()),
             ) as install,
             patch.object(apps, "sync_apps"),

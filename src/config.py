@@ -9,10 +9,11 @@ from typing import Any
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+SYNC_EXTRAS = {"vscode-sync": "vscode", "iterm-sync": "iterm", "codex-sync": "codex"}
 
 
 def load(name: str) -> dict[str, Any]:
-    document = yaml.safe_load((ROOT / "config/install.yaml").read_text())
+    document = yaml.safe_load((ROOT / "config/setup.yaml").read_text())
     return document["settings"]["sync"] if name == "sync" else document["setup-" + name]["settings"]
 
 
@@ -67,7 +68,7 @@ def load_catalog(root: Path) -> tuple[Stage, ...]:
     owners: dict[Path, str] = {}
     destinations: set[str] = set()
     root = root.resolve()
-    document = yaml.safe_load((root / "config/install.yaml").read_text())
+    document = yaml.safe_load((root / "config/setup.yaml").read_text())
     for stage_id, settings in document.items():
         if stage_id == "settings":
             continue
@@ -84,14 +85,7 @@ def load_catalog(root: Path) -> tuple[Stage, ...]:
         if unknown:
             raise ValueError(f"Unknown actions in {stage_id}: {', '.join(sorted(unknown))}")
         extras = settings.get("extras", ())
-        if set(extras) - {
-            "shell-plugins",
-            "sudo-touch-id",
-            "macos-defaults",
-            "vscode",
-            "iterm",
-            "codex",
-        }:
+        if set(extras) - {"shell-plugins", "sudo-touch-id", "macos-defaults"} - SYNC_EXTRAS.keys():
             raise ValueError(f"Unknown extras in {stage_id}.")
         for kind in ("brew", "cask", "mas"):
             if kind in settings:
@@ -108,8 +102,7 @@ def load_catalog(root: Path) -> tuple[Stage, ...]:
                     )
         configs = tuple(Configuration(**c) for c in settings.get("link", ())) + tuple(
             Configuration(document["setup-" + name]["settings"]["shared"], adapter=name)
-            for name in extras
-            if name in {"vscode", "iterm", "codex"}
+            for name in (SYNC_EXTRAS[extra] for extra in extras if extra in SYNC_EXTRAS)
         )
         packages = tuple(
             Package(kind, name, values[name] if kind == "mas" else 0)

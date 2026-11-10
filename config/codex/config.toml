@@ -1,7 +1,6 @@
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 model_verbosity = "low"
-
 model_post_turn_compact_threshold_percent = 75
 tool_output_token_limit = 4000
 
@@ -13,12 +12,21 @@ sandbox_mode = "workspace-write"
 network_access = true
 
 [features]
+chronicle = true
 js_repl = false
 memories = true
 
 [memories]
 generate_memories = true
 use_memories = true
+
+[mcp_servers.node_repl]
+env_vars = [
+  "BROWSER_USE_ACCESS_EXECUTOR_ID",
+  "BROWSER_USE_ACCESS_PIPE_PATH",
+  "BROWSER_USE_ACCESS_VERIFYING_IDENTITY",
+]
+startup_timeout_sec = 120
 
 [mcp_servers.openaiDeveloperDocs]
 startup_readiness = "catalog"
@@ -39,30 +47,23 @@ url = "https://developers.openai.com/mcp"
 "unified-computer-use@openai-bundled" = { enabled = true }
 "visualize@openai-bundled" = { enabled = true }
 
+[plugins."computer-history@openai-bundled"]
+enabled = true
+
 [desktop]
 ambient-suggestions-enabled = true
-appearanceDiffMarkerStyle = "color"
 appearanceDarkCodeThemeId = "catppuccin"
+appearanceDiffMarkerStyle = "color"
 appearanceLightCodeThemeId = "catppuccin"
 avatar-overlay-pet-visible = false
 confirm-before-close = "never"
 conversationDetailMode = "STEPS_COMMANDS"
-followUpQueueMode = "queue"
+followUpQueueMode = "steer"
 git-branch-prefix = ""
 git-pull-request-merge-method = "squash"
+reviewDelivery = "detached"
 show-context-window-usage = true
-
-[desktop.appearanceLightChromeTheme]
-accent = "#8839ef"
-contrast = 45
-ink = "#4c4f69"
-opaqueWindows = false
-surface = "#eff1f5"
-
-[desktop.appearanceLightChromeTheme.semanticColors]
-diffAdded = "#40a02b"
-diffRemoved = "#d20f39"
-skill = "#8839ef"
+worktree-upstream-refresh-mode = "best-effort"
 
 [desktop.appearanceDarkChromeTheme]
 accent = "#cba6f7"
@@ -71,10 +72,22 @@ ink = "#cdd6f4"
 opaqueWindows = false
 surface = "#1e1e2e"
 
+[desktop.appearanceLightChromeTheme]
+accent = "#8839ef"
+contrast = 45
+ink = "#4c4f69"
+opaqueWindows = false
+surface = "#eff1f5"
+
 [desktop.appearanceDarkChromeTheme.semanticColors]
 diffAdded = "#a6e3a1"
 diffRemoved = "#f38ba8"
 skill = "#cba6f7"
+
+[desktop.appearanceLightChromeTheme.semanticColors]
+diffAdded = "#40a02b"
+diffRemoved = "#d20f39"
+skill = "#8839ef"
 
 [tui]
 resume_cwd = "session"

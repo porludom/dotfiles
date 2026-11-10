@@ -102,7 +102,7 @@ def apply(
                     run_shell("touch-id", path(touch_id["path"]), path(touch_id["template"]))
             elif extra == "macos-defaults" and command == "install":
                 macos_preferences()
-            elif extra == "vscode" and command == "install":
+            elif extra == "vscode-sync" and command == "install":
                 for association in load("vscode")["file_associations"]:
                     subprocess.run(shlex.split(association), check=True)
     apps.sync_apps(root, collect_apps(stages), vscode_ui_restored=vscode_ui_restored)

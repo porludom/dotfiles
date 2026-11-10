@@ -15,7 +15,7 @@ Review these files **before installing**:
 
 | File                            | What to customize                                                             |
 | ------------------------------- | ----------------------------------------------------------------------------- |
-| `config/install.yaml`           | Apps, macOS preferences and entire `setup-*` stages.                          |
+| `config/setup.yaml`           | Apps, macOS preferences and entire `setup-*` stages.                          |
 | `pyproject.toml`                | Personal Python libraries in `global`. Keep `installer` intact.               |
 | `.python-version`               | Default Python version, managed by uv.                                        |
 | `home/`                         | Always linked into `~/`; review every file. Existing conflicts are backed up. |

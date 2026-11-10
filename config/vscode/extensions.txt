@@ -90,7 +90,6 @@ twxs.cmake
 unthrottled.doki-theme
 usernamehw.errorlens
 vscodevim.vim
-wakatime.vscode-wakatime
 whizkydee.material-palenight-theme
 wholroyd.jinja
 yzhang.markdown-all-in-one

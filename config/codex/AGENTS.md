@@ -51,8 +51,9 @@
   relevant. Check nearby callers for the same defect. Preserve user data and required
   failure guarantees; approved removals also retire obsolete code and expectations.
 - Follow repository conventions; use the applicable Google style guide where they
-  are silent. Format changed files with available configured tools. Comment only
-  non-obvious rationale or traps.
+  are silent. Format changed files with available configured tools. Use blank lines
+  to separate meaningful blocks; keep tightly related lines together and preserve
+  language-specific spacing conventions. Comment only non-obvious rationale or traps.
   Keep durable behavior and operating instructions current in their owning project.
 
 ## Effort and verification
@@ -98,7 +99,9 @@
   tool calls for small operations. Give workers bounded outcomes and exclusive
   ownership; each owner verifies behavior and shares reusable evidence.
 - Verify and commit owned work on a task branch unless instructed otherwise. Follow
-  repository commit style, review the staged diff and keep unrelated tasks separate.
+  repository commit style. Describe the result in commit titles instead of repeating
+  the requested action or the action already expressed by a commit prefix. Review
+  the staged diff and keep unrelated tasks separate.
   Main integration requires explicit approval for the selected changes; pushing and
   deployment require separate authorization. Reuse permission within its scope.
 - Keep main linear. Do not rewrite another owner's history without authorization.

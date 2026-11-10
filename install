@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
+
 for argument in "$@"; do
   if [[ "$argument" == --help || "$argument" == -h ]]; then
     cat <<'USAGE'
@@ -13,10 +14,12 @@ USAGE
     exit 0
   fi
 done
+
 if [[ "$(uname -s)" != Darwin ]]; then
   echo 'This installer supports macOS only.' >&2
   exit 1
 fi
+
 case "${1:-install}" in
   install|update)
     if ! xcode-select -p >/dev/null 2>&1; then
@@ -27,9 +30,11 @@ case "${1:-install}" in
     bash src/system.sh --python
     ;;
 esac
+
 python="$HOME/.local/bin/python3"
 if [[ ! -x "$python" ]] || ! "$python" -c 'import yaml, json5, tomlkit' >/dev/null 2>&1; then
   printf 'Installer runtime is missing. Run ./install first.\n' >&2
   exit 1
 fi
-exec "$python" -m src.install "$@"
+
+exec "$python" -m src.cli "$@"

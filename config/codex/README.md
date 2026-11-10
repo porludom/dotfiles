@@ -2,7 +2,7 @@
 
 `config.toml` synchronizes both ways with `~/.codex/config.toml` through the existing
 installer sync agent. New keys are shared unless excluded by `local_only` key paths
-in `config/install.yaml`. Exclusions also apply to nested fields; arrays sync as units.
+in `config/setup.yaml`. Exclusions also apply to nested fields; arrays sync as units.
 The exclusion list is not a privacy guarantee: newly introduced machine-specific or
 secret fields must be excluded before sync. Review repository diffs before committing.
 

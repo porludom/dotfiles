@@ -56,14 +56,14 @@ def install_agent(root: Path, apps: tuple[str, ...]):
         root / "install",
         root / "src/system.sh",
         *sorted((root / "src").rglob("*.py")),
-        root / "config/install.yaml",
+        root / "config/setup.yaml",
     ]
     for name in apps:
         watch.extend(APPLICATIONS[name]().WATCH_PATHS)
     content = plistlib.dumps(
         {
             "Label": config["label"],
-            "ProgramArguments": [sys.executable, "-m", "src.install", "sync"],
+            "ProgramArguments": [sys.executable, "-m", "src.cli", "sync"],
             "WorkingDirectory": str(root),
             "WatchPaths": [str(path) for path in watch],
             "StartInterval": config["interval_seconds"],
