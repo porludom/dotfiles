@@ -66,14 +66,6 @@ plugins=(
   #   gpg-agent
 )
 
-# The ssh-agent plugin reads these settings while loading.
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  zstyle :omz:plugins:ssh-agent ssh-add-args --apple-use-keychain
-  # An explicit identity list replaces the plugin's defaults; retain those keys.
-  zstyle :omz:plugins:ssh-agent identities \
-    id_rsa id_dsa id_ecdsa id_ed25519 id_ed25519_sk identity id_ed25519_rizzzhik
-fi
-
 eval "$(sheldon source)"
 
 # Shell integrations
@@ -134,3 +126,9 @@ if command -v atuin >/dev/null 2>&1; then
   export ATUIN_CONFIG_DIR="$HOME/.config/atuin"
   eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
 fi
+
+# tclaude
+export PATH="/Users/r.e.voronov/.local/bin:$PATH"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+export PATH="$HOME/protoc-27.2/bin:$PATH"

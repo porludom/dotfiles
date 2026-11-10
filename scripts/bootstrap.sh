@@ -28,7 +28,7 @@ install)
   step "Apply links" apply_links
   step "Install shell plugins" sheldon lock
   step "Apply macOS preferences" apply_macos_preferences
-  step "Configure application settings synchronization" sync_settings --setup
+  # step "Configure application settings synchronization" sync_settings --setup
   log "Installation complete."
   ;;
 apply)
@@ -40,7 +40,7 @@ apply)
     }
   fi
   step "Apply links" apply_links
-  step "Apply configured application settings" sync_settings
+  # step "Apply configured application settings" sync_settings
   log "Dotfiles applied."
   ;;
 *)

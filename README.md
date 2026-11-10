@@ -1,4 +1,4 @@
-# riZZZhik's dotfiles
+# porludom's dotfiles
 
 ## Installation
 
@@ -7,7 +7,7 @@
 xcode-select --install
 
 # Clone dotfiles repo
-git clone https://github.com/riZZZhik/dotfiles.git $HOME/.dotfiles
+git clone https://github.com/porludom/dotfiles.git $HOME/.dotfiles
 
 # Go to the dotfiles directory
 cd $HOME/.dotfiles

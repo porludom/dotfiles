@@ -32,7 +32,7 @@ brew "sheldon"                   # https://sheldon.cli.rs
 brew "starship"                  # https://starship.rs
 brew "superfile"                 # https://superfile.dev/
 brew "trash-cli"                 # https://github.com/andreafrancia/trash-cli
-brew "tldr"                      # https://tldr.sh
+# brew "tldr"                      # https://tldr.sh
 brew "terminal-notifier"         # https://github.com/julienXX/terminal-notifier
 brew "tmux"                      # https://github.com/tmux/tmux/wiki
 brew "uv"                        # https://docs.astral.sh/uv
@@ -53,20 +53,11 @@ brew "zoxide"                    # https://github.com/ajeetdsouza/zoxide
 # Desktop applications
 cask "arc"                       # https://arc.net
 cask "chatgpt"                   # https://chatgpt.com
-# cask "claude"                    # https://claude.com/product/overview
-# cask "discord"                   # https://discord.com
-cask "iina"                      # https://iina.io
-cask "notion"                    # https://notion.com
 cask "spotify"                   # https://spotify.com
-cask "readdle-spark"             # https://sparkmailapp.com
-cask "steam"                     # https://store.steampowered.com
 cask "telegram"                  # https://telegram.org
-# cask "whisky"                    # https://getwhisky.app
-cask "zoom"                      # https://zoom.us
 
 # Development
 cask "docker-desktop"            # https://docker.com
-# cask "jetbrains-toolbox"         # https://jetbrains.com/toolbox-app
 cask "iterm2"                    # https://iterm2.com
 cask "netron"                    # https://netron.app
 cask "visual-studio-code"        # https://code.visualstudio.com
@@ -76,28 +67,14 @@ cask "font-fira-code"            # https://github.com/tonsky/FiraCode
 cask "font-fira-code-nerd-font"  # https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode
 
 # Utils
-cask "bartender"                 # https://macbartender.com
-# cask "betterdisplay"             # https://github.com/waydabber/BetterDisplay
 cask "karabiner-elements"        # https://karabiner-elements.pqrs.org
-cask "linearmouse"               # https://linearmouse.app
-cask "logi-options+"             # https://logitech.com/en-us/software/logi-options-plus.html
-# cask "logitech-g-hub"            # https://logitechg.com/en-us/innovation/g-hub.html
-# cask "mos"                       # https://mos.caldis.me/
 cask "raycast"                   # https://raycast.com
-cask "transmission"              # https://transmissionbt.com
-cask "vivid-app"                 # https://getvivid.app
 
 # ------------------------------------------------------------------------------
 # App Store applications
 # ------------------------------------------------------------------------------
-mas "Keynote", id: 409183694
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
+# mas "Amphetamine", id: 937984704
+# mas "Dropover", id: 1355679052
+# mas "MyWallpaper", id: 1552826194
 
-mas "Amphetamine", id: 937984704
-mas "Dropover", id: 1355679052
-mas "MyWallpaper", id: 1552826194
-
-mas "GoodNotes", id: 1444383602
-mas "Notability", id: 360593530
-mas "The Unarchiver",  id: 425424353
+# mas "The Unarchiver",  id: 425424353
