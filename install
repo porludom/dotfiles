@@ -1,6 +1,40 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-exec bash "$ROOT/scripts/bootstrap.sh" install "$@"
+for argument in "$@"; do
+  if [[ "$argument" == --help || "$argument" == -h ]]; then
+    cat <<'USAGE'
+Usage: ./install [install|apply|update|sync|cleanup|link SOURCE|fork]
+
+Install configured stages, link dotfiles and apply settings.
+Install/update reconcile Python and libraries; other commands use the installed runtime.
+After native VS Code UI-state restoration, retry with apply --vscode-ui-restored.
+USAGE
+    exit 0
+  fi
+done
+
+if [[ "$(uname -s)" != Darwin ]]; then
+  echo 'This installer supports macOS only.' >&2
+  exit 1
+fi
+
+case "${1:-install}" in
+  install|update)
+    if ! xcode-select -p >/dev/null 2>&1; then
+      xcode-select --install
+      printf 'Finish installing Command Line Tools, then rerun this command.\n' >&2
+      exit 1
+    fi
+    bash src/system.sh --python
+    ;;
+esac
+
+python="$HOME/.local/bin/python3"
+if [[ ! -x "$python" ]] || ! "$python" -c 'import yaml, json5, tomlkit' >/dev/null 2>&1; then
+  printf 'Installer runtime is missing. Run ./install first.\n' >&2
+  exit 1
+fi
+
+exec "$python" -m src.cli "$@"

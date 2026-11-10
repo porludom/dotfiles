@@ -6,7 +6,6 @@ if _exists eza; then
   zstyle ':fzf-tab:complete:*cd*:*' fzf-preview 'eza -a --color=always -- "$realpath"'
 fi
 
-# File picker: honor ignore files while keeping hidden files searchable.
 if _exists fd; then
   export FZF_CTRL_T_COMMAND="fd --type f --type d --hidden \
     --exclude .git --exclude node_modules --exclude .venv --exclude __pycache__ \

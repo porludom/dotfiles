@@ -1,13 +1,8 @@
 # Expand aliases in the command following sudo.
 alias sudo='sudo '
 
-# Command replacements
 if _exists trash; then
   alias rm='trash'
-fi
-
-if _exists tldr; then
-  alias help='tldr'
 fi
 
 if _exists eza; then
@@ -21,9 +16,10 @@ if _exists bat; then
   alias cat='bat -p'
 fi
 
-alias open='open_command'
+if _exists open_command; then
+  alias open='open_command'
+fi
 
-# Shell shortcuts
 alias caff='caffeinate -i'
 alias c='clear'
 alias q="cd ~ && clear"
@@ -36,12 +32,10 @@ alias x+='chmod +x'
 alias reload="source $HOME/.zshrc"
 alias path='echo -e ${PATH//:/\\n}'
 
-# Open files and terminals
 alias o='open'
 alias oo='open .'
 alias term='open -a iterm.app'
 
-# Navigation
 [ -d ~/Downloads ] && alias dl='cd ~/Downloads'
 [ -d ~/Desktop ] && alias dt='cd ~/Desktop'
 [ -d ~/dev ] && alias dev='cd ~/dev'
@@ -49,24 +43,26 @@ function mkcd {
   command mkdir -p -- "$1" && cd -- "$1"
 }
 
-# Files and networking
 alias sizes='du -sh * | sort -h'
 alias get="curl -O -L"
 alias myip='ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"'
 alias ports='lsof -i -P -n | grep LISTEN'
 function killport() { lsof -tiTCP:"${1:?Usage: killport <port>}" -sTCP:LISTEN | xargs kill -9 ; }
 
-# Git review
 if command -v lazygit >/dev/null 2>&1; then
   alias lg='lazygit'
 fi
 
 function gud {
-  branch=$(git branch --show-current)
-  main_branch=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
+  local branch main_branch remote
+  branch="$(git symbolic-ref --quiet --short HEAD)" || return
+  remote="$(git remote show origin)" || return
+  main_branch="$(printf '%s\n' "$remote" | awk '/HEAD branch:/ {print $NF}')"
 
-  git switch $main_branch
-  git pull --rebase
-  git fetch --all --tags --prune --jobs=10
-  git branch --delete --force $branch
+  git switch -- "$main_branch" &&
+    git pull --rebase &&
+    git fetch --all --tags --prune --jobs=10 || return
+  if [[ "$branch" != "$main_branch" ]]; then
+    git branch --delete -- "$branch"
+  fi
 }
