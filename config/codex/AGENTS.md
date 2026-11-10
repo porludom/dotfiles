@@ -58,6 +58,11 @@
 
 ## Effort and verification
 
+- During substantial work, give brief progress updates at meaningful milestones
+  and roughly once every five minutes during ongoing work: what finished, what is happening
+  now, and what remains before handoff. Reuse the agreed plan; keep progress in
+  chat without tracking files or extra tool calls. Give a remaining-time range
+  only when grounded in evidence, and revise it when uncertainty changes.
 - Before substantial work, check model/effort and environment suitability. Recommend
   a specific setting only when the gain justifies interruption; do not infer active
   settings from defaults. Reassess after material scope changes or repeated reasoning
