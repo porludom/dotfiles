@@ -27,7 +27,16 @@ class VSCode(App):
         self.WATCH_PATHS = (self.SHARED, self.PRIVATE.parent, self.EXTENSIONS)
         self.LAYOUT_KEYS = frozenset(self.CONFIG["layout_keys"])
 
-    def sync(self) -> None:
+    def sync(self, *, ui_restored: bool = False) -> None:
+        profile = self.SHARED / "ui-state.code-profile"
+        first_sync = not self.EXTENSION_BASELINE.exists()
+        if first_sync and profile.exists() and not ui_restored:
+            raise RuntimeError(
+                f"Restore VS Code UI state before the first sync: import {profile} "
+                "using Profiles: Import Profile, set the profile name to Default, and confirm "
+                "Replace. Reload the Default profile and check the layout, then run "
+                "./install apply --vscode-ui-restored. No VS Code files were changed."
+            )
         values = {}
         database = self.USER / "globalStorage/state.vscdb"
         if database.exists():
@@ -35,10 +44,15 @@ class VSCode(App):
                 values = dict(connection.execute("SELECT key, value FROM ItemTable"))
         if values.get("sync.enable") == "true":
             raise RuntimeError("Turn off Settings Sync in VS Code before using dotfiles sync.")
+        if first_sync and profile.exists() and ui_restored and not values:
+            raise RuntimeError(
+                "VS Code UI state is unavailable. Finish importing into the Default profile "
+                "and reload it before acknowledging restoration."
+            )
         self.sync_settings()
         self.sync_extensions()
         if values:
-            self.export_ui_state(values, self.SHARED / "ui-state.code-profile")
+            self.export_ui_state(values, profile)
 
     def sync_settings(self, user_dir: Path | None = None) -> None:
         user_dir = self.USER if user_dir is None else user_dir

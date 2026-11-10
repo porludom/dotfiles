@@ -66,7 +66,13 @@ def check_sources(root: Path, stages: tuple[Stage, ...]):
                 raise RuntimeError(f"Restore missing selected configuration first: {config.source}")
 
 
-def apply(root: Path, stages: tuple[Stage, ...], command="apply"):
+def apply(
+    root: Path,
+    stages: tuple[Stage, ...],
+    command="apply",
+    *,
+    vscode_ui_restored: bool = False,
+):
     check_sources(root, stages)
     link_home(root / "home", Path.home())
     for stage in stages:
@@ -99,7 +105,7 @@ def apply(root: Path, stages: tuple[Stage, ...], command="apply"):
             elif extra == "vscode" and command == "install":
                 for association in load("vscode")["file_associations"]:
                     subprocess.run(shlex.split(association), check=True)
-    apps.sync_apps(root, collect_apps(stages))
+    apps.sync_apps(root, collect_apps(stages), vscode_ui_restored=vscode_ui_restored)
 
 
 def macos_preferences():
@@ -120,7 +126,14 @@ def main(argv=None, root=ROOT):
         default="install",
     )
     parser.add_argument("source", nargs="?", type=Path, help="Repository home directory to link")
+    parser.add_argument(
+        "--vscode-ui-restored",
+        action="store_true",
+        help="Acknowledge native UI-state import into VS Code's Default profile (apply/sync).",
+    )
     args = parser.parse_args(argv)
+    if args.vscode_ui_restored and args.command not in {"apply", "sync"}:
+        parser.error("--vscode-ui-restored is only valid with apply or sync")
     if sys.platform != "darwin":
         parser.error("This installer supports macOS only.")
     os.environ["PATH"] = (
@@ -160,9 +173,14 @@ def main(argv=None, root=ROOT):
         return
     stages = load_catalog(root)
     if command == "sync":
-        apps.sync_apps(root, collect_apps(stages), register_agent=False)
+        apps.sync_apps(
+            root,
+            collect_apps(stages),
+            register_agent=False,
+            vscode_ui_restored=args.vscode_ui_restored,
+        )
         return
-    apply(root, stages, command=command)
+    apply(root, stages, command=command, vscode_ui_restored=args.vscode_ui_restored)
     print("Dotfiles applied. Review changes, then stage, commit and push them yourself.")
 
 

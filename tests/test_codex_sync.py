@@ -130,3 +130,71 @@ class CodexSyncTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "local fields"):
                 adapter.sync()
             self.assertEqual(target.read_bytes(), before)
+
+    def test_missing_file_after_baseline_stops_without_writes(self):
+        for missing in ("local", "shared", "both"):
+            with self.subTest(missing=missing), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                files = {name: root / name for name in ("local", "shared", "baseline")}
+                for file in files.values():
+                    file.write_text('model="synthetic"\n')
+                for name in ("local", "shared") if missing == "both" else (missing,):
+                    files[name].unlink()
+                settings = {
+                    "shared": str(files["shared"]),
+                    "destination": str(files["local"]),
+                    "baseline": str(files["baseline"]),
+                    "backups": str(root / "backups"),
+                    "local_only": [],
+                }
+                before = {p.name: p.read_bytes() for p in root.iterdir()}
+                with patch("src.apps.base.load", return_value=settings):
+                    adapter = Codex()
+                with self.assertRaisesRegex(FileNotFoundError, "restore missing configuration"):
+                    adapter.sync()
+                self.assertEqual(before, {p.name: p.read_bytes() for p in root.iterdir()})
+
+    def test_first_run_initializes_missing_files(self):
+        for missing in ("local", "shared", "both"):
+            with self.subTest(missing=missing), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                for name in ("local", "shared"):
+                    if missing not in (name, "both"):
+                        (root / name).write_text('model="synthetic"\n')
+                with patch(
+                    "src.apps.base.load",
+                    return_value={
+                        "shared": str(root / "shared"),
+                        "destination": str(root / "local"),
+                        "baseline": str(root / "baseline"),
+                        "backups": str(root / "backups"),
+                        "local_only": [],
+                    },
+                ):
+                    adapter = Codex()
+                adapter.sync()
+                expected = {} if missing == "both" else {"model": "synthetic"}
+                for name in ("local", "shared", "baseline"):
+                    self.assertEqual(tomlkit.parse((root / name).read_text()), expected)
+
+    def test_existing_empty_file_still_intentionally_removes_all_portable_keys(self):
+        for empty in ("local", "shared"):
+            with self.subTest(empty=empty), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                for name in ("local", "shared", "baseline"):
+                    (root / name).write_text('model="synthetic"\n')
+                (root / empty).write_text("")
+                with patch(
+                    "src.apps.base.load",
+                    return_value={
+                        "shared": str(root / "shared"),
+                        "destination": str(root / "local"),
+                        "baseline": str(root / "baseline"),
+                        "backups": str(root / "backups"),
+                        "local_only": [],
+                    },
+                ):
+                    adapter = Codex()
+                adapter.sync()
+                for name in ("local", "shared", "baseline"):
+                    self.assertEqual(tomlkit.parse((root / name).read_text()), {})

@@ -19,7 +19,13 @@ from .vscode import VSCode as VSCode
 APPLICATIONS: dict[str, type[App]] = {"vscode": VSCode, "iterm": ITerm, "codex": Codex}
 
 
-def sync_apps(root: Path, apps: tuple[str, ...], *, register_agent: bool = True):
+def sync_apps(
+    root: Path,
+    apps: tuple[str, ...],
+    *,
+    register_agent: bool = True,
+    vscode_ui_restored: bool = False,
+):
     if not apps:
         return
     STATE.mkdir(parents=True, exist_ok=True)
@@ -28,7 +34,11 @@ def sync_apps(root: Path, apps: tuple[str, ...], *, register_agent: bool = True)
         fcntl.flock(lock, fcntl.LOCK_EX)
         for name in apps:
             try:
-                APPLICATIONS[name]().sync()
+                adapter = APPLICATIONS[name]()
+                if name == "vscode" and vscode_ui_restored:
+                    adapter.sync(ui_restored=True)
+                else:
+                    adapter.sync()
             except Exception as error:  # noqa: BLE001 — isolate failures at the application boundary.
                 failures.append(f"{name}: {error}")
     if failures:

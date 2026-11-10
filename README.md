@@ -35,6 +35,25 @@ All remaining stages run without a confirmation menu. If Command Line Tools setu
 opens, finish it and rerun. App backups go to `.private/backups/`.
 Review local changes, then commit and push them yourself.
 
+## Restore VS Code layout on a new machine
+
+Before its first sync, VS Code setup stops if a saved `config/vscode/ui-state.code-profile`
+exists. In VS Code, run **Profiles: Import Profile**, select that file, change the
+profile name to **Default**, and confirm **Replace**. This file contains only UI
+state; dotfiles manages settings, keybindings and extensions separately. Reload
+the Default profile and check the layout, then run:
+
+```sh
+./install apply --vscode-ui-restored
+```
+
+The acknowledgement also works with `./install sync`. It allows the first sync to
+establish the normal local extension baseline; subsequent syncs export layout
+changes normally. Machines with an existing baseline need no acknowledgement.
+If that local baseline was removed, repeat the explicit restoration/check before
+acknowledging. Import into Default: a separate “Dotfiles UI” profile is outside
+this sync adapter's scope.
+
 ## Maintain
 
 - `./install apply` — relink files and reapply app settings.

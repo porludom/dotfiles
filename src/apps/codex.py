@@ -90,6 +90,14 @@ class Codex(App):
         if any(p.is_symlink() for p in files):
             raise ValueError("Codex sync files must not be symlinks.")
         originals = [p.read_text() if p.exists() else None for p in files]
+        if originals[2] is not None:
+            missing = [str(p) for p, text in zip(files[:2], originals[:2]) if text is None]
+            if missing:
+                raise FileNotFoundError(
+                    "Codex sync stopped: restore missing configuration file(s): "
+                    + ", ".join(missing)
+                    + ". To remove preferences intentionally, edit keys in the existing file."
+                )
         local, shared, base = [tomlkit.parse(text or "") for text in originals]
         values = merge(
             self.portable(base),

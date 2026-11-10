@@ -63,6 +63,6 @@ function gud {
     git pull --rebase &&
     git fetch --all --tags --prune --jobs=10 || return
   if [[ "$branch" != "$main_branch" ]]; then
-    git branch --delete --force -- "$branch"
+    git branch --delete -- "$branch"
   fi
 }

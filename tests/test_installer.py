@@ -190,7 +190,7 @@ class InstallerTests(unittest.TestCase):
         extra = self.local_home / ".config/new-app.conf"
         extra.write_text("local only")
         self.assertFalse((self.root / "home/.config/new-app.conf").exists())
-        sync.assert_called_once_with(self.root, ())
+        sync.assert_called_once_with(self.root, (), vscode_ui_restored=False)
 
     def test_missing_home_source_stops_before_linking(self):
         shutil.rmtree(self.root / "home")
@@ -588,7 +588,38 @@ class InstallerTests(unittest.TestCase):
             patch.object(apps, "sync_apps") as sync,
         ):
             main(["sync"], self.root)
-            sync.assert_called_once_with(self.root, (), register_agent=False)
+            sync.assert_called_once_with(
+                self.root, (), register_agent=False, vscode_ui_restored=False
+            )
+
+    def test_vscode_ui_acknowledgement_reaches_only_the_vscode_adapter(self):
+        self.selected.add("setup-vscode")
+        self.configure()
+        vscode_adapter = Mock()
+        iterm_adapter = Mock()
+        with (
+            patch("src.install.sys.platform", "darwin"),
+            patch.object(apps, "STATE", self.root / "state"),
+            patch.dict(
+                apps.APPLICATIONS,
+                {"vscode": lambda: vscode_adapter, "iterm": lambda: iterm_adapter},
+            ),
+        ):
+            main(["sync", "--vscode-ui-restored"], self.root)
+            vscode_adapter.sync.assert_called_once_with(ui_restored=True)
+            vscode_adapter.reset_mock()
+            with patch.object(apps, "install_agent"):
+                main(["apply", "--vscode-ui-restored"], self.root)
+            vscode_adapter.sync.assert_called_once_with(ui_restored=True)
+            vscode_adapter.reset_mock()
+            apps.sync_apps(
+                self.root,
+                ("vscode", "iterm"),
+                register_agent=False,
+                vscode_ui_restored=True,
+            )
+            vscode_adapter.sync.assert_called_once_with(ui_restored=True)
+            iterm_adapter.sync.assert_called_once_with()
 
     def test_update_only_updates_configured_packages_and_settings(self):
         self.selected.add("setup-vscode")
