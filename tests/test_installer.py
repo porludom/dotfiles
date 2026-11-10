@@ -478,14 +478,25 @@ class InstallerTests(unittest.TestCase):
         state = home / "state"
         state.mkdir(parents=True)
         adapter = SimpleNamespace(WATCH_PATHS=[self.root / "config/vscode"])
+        codex_config = {
+            "shared": str(self.root / "config/codex/config.toml"),
+            "destination": str(home / ".codex/config.toml"),
+            "baseline": str(state / "codex-baseline.toml"),
+            "backups": str(state / "backups"),
+        }
+        with patch("src.apps.base.load", return_value=codex_config):
+            codex_adapter = apps.Codex()
         with (
             patch.object(configuration.Path, "home", return_value=home),
             patch.object(apps, "STATE", state),
-            patch.dict(apps.APPLICATIONS, {"vscode": lambda: adapter}),
+            patch.dict(
+                apps.APPLICATIONS,
+                {"vscode": lambda: adapter, "codex": lambda: codex_adapter},
+            ),
             patch.object(apps.subprocess, "run") as run,
         ):
             run.return_value.returncode = 0
-            apps.install_agent(self.root, ("vscode",))
+            apps.install_agent(self.root, ("vscode", "codex"))
             agent = home / "Library/LaunchAgents/com.dotfiles.sync.plist"
             data = plistlib.loads(agent.read_bytes())
             self.assertEqual(
@@ -494,8 +505,11 @@ class InstallerTests(unittest.TestCase):
             self.assertEqual(data["WorkingDirectory"], str(self.root))
             self.assertIn(str(self.root / "config/install.yaml"), data["WatchPaths"])
             self.assertIn(str(self.root / "src/apps/vscode.py"), data["WatchPaths"])
+            self.assertIn(str(codex_adapter.SHARED), data["WatchPaths"])
+            self.assertIn(codex_config["destination"], data["WatchPaths"])
+            self.assertNotIn(str(home / ".codex"), data["WatchPaths"])
             self.assertFalse(any("sync.py" in p for p in data["ProgramArguments"]))
-            apps.install_agent(self.root, ("vscode",))
+            apps.install_agent(self.root, ("vscode", "codex"))
             self.assertEqual(run.call_count, 3)
             run.assert_called_with(
                 ["launchctl", "print", f"gui/{os.getuid()}/com.dotfiles.sync"],
@@ -508,9 +522,9 @@ class InstallerTests(unittest.TestCase):
                 subprocess.CalledProcessError(5, "launchctl"),
             ]
             with self.assertRaises(subprocess.CalledProcessError):
-                apps.install_agent(self.root, ("vscode",))
+                apps.install_agent(self.root, ("vscode", "codex"))
             run.side_effect = [SimpleNamespace(returncode=1), run.return_value, run.return_value]
-            apps.install_agent(self.root, ("vscode",))
+            apps.install_agent(self.root, ("vscode", "codex"))
             run.assert_called_with(
                 ["launchctl", "bootstrap", f"gui/{os.getuid()}", str(agent)], check=True
             )

@@ -115,4 +115,4 @@ class Codex(App):
 
     def __init__(self):
         super().__init__()
-        self.WATCH_PATHS = (self.SHARED, path(self.CONFIG["destination"]).parent)
+        self.WATCH_PATHS = (self.SHARED, path(self.CONFIG["destination"]))
